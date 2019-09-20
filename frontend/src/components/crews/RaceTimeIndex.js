@@ -30,13 +30,12 @@ class RaceTimeIndex extends React.Component {
   }
 
   displayStartTimes(){
-    const startTimes = this.state.raceTimes.filter(time => time.tap === 'Start')
-    this.setState({ raceTimesToDisplay: startTimes, startTab: true, finishTab: false })
+    this.setState({ startTab: true, finishTab: false }, () => this.combineFilters(this.state.raceTimes))
   }
 
   displayFinishTimes(){
-    const finishTimes = this.state.raceTimes.filter(time => time.tap === 'Finish')
-    this.setState({ raceTimesToDisplay: finishTimes, startTab: false, finishTab: true})
+    this.setState({ startTab: false, finishTab: true}, () => this.combineFilters(this.state.raceTimes))
+    console.log(this.state.startTab)
   }
 
   getNumTimesWithNoCrew(){
@@ -58,6 +57,7 @@ class RaceTimeIndex extends React.Component {
   combineFilters(filteredTimes) {
     let filteredBySearchText
     let filteredByTimesWithoutCrew
+    let filteredByTap
 
 
     // Create filter based on Regular expression of the search term
@@ -66,18 +66,24 @@ class RaceTimeIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.raceTimes
     } else {
-      filteredBySearchText = this.state.raceTimes.filter(time => time.crew.name !== null ? re.test(time.crew.name) : re.test(time.sequence))
+      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.id) : re.test(time.sequence))
     }
 
     if(this.state.timesWithoutCrewBoolean) {
-      filteredByTimesWithoutCrew = this.state.raceTimesToDisplay.filter(time => time.crew === null)
+      filteredByTimesWithoutCrew = this.state.raceTimes.filter(time => time.crew === null)
     } else {
       filteredByTimesWithoutCrew = this.state.raceTimes
     }
 
+    if(this.state.startTab) {
+      filteredByTap = this.state.raceTimes.filter(time => time.tap === 'Start')
+    } else {
+      filteredByTap = this.state.raceTimes.filter(time => time.tap === 'Finish')
+    }
+
 
     _.indexOf = _.findIndex
-    filteredTimes = _.intersection(this.state.raceTimesToDisplay,  filteredBySearchText, filteredByTimesWithoutCrew)
+    filteredTimes = _.intersection(this.state.raceTimes,  filteredBySearchText, filteredByTimesWithoutCrew, filteredByTap)
 
     return this.setState({ raceTimesToDisplay: filteredTimes })
 

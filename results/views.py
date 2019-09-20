@@ -61,7 +61,7 @@ class RaceTimeDetailView(APIView):
     def put(self, request, pk):
         race_time = self.get_race_time(pk)
         race_time = RaceTime.objects.get(pk=pk)
-        serializer = PopulatedRaceTimesSerializer(race_time, data=request.data)
+        serializer = RaceTimesSerializer(race_time, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)

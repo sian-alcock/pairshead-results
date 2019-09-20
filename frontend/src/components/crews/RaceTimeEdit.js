@@ -8,12 +8,16 @@ class RaceTimeEdit extends React.Component {
   constructor() {
     super()
     this.state= {
-      formData: {},
-      crews: []
+      errors: {},
+      crews: [],
+      crew: {},
+      data: {},
+      formData: {}
     }
     // this.getCrews = this.getCrews.bind(this)
 
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -39,9 +43,10 @@ class RaceTimeEdit extends React.Component {
     }
 
     axios.put(`/api/race-times/${this.props.match.params.id}`, data)
-      .then(() => this.props.history.push(`/crews/${this.props.match.params.id}`))
+      .then(() => this.props.history.push('/race-times'))
       .catch(err => this.setState({ errors: err.response.data }))
   }
+
 
   handleSelectChange(selectedOption) {
     const formData = { ...this.state.formData, crew: selectedOption }

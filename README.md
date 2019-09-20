@@ -1,7 +1,10 @@
 # **Project 4: Pairs Head of the River Rowing Race Results**
 
 ## Overview
-xxx. [https://pairshead.herokuapp.com/#/]
+
+Launch on [Heroku](https://pairshead.herokuapp.com/#/).
+
+![Screenshot](/readme-assets/results-index.png)
 
 This project has been built as part of a learning module in General Assembly's Software Engineering Immersive Course using JavaScript, Python, Django and React.
 
@@ -10,9 +13,12 @@ It has been solely developed by Sian Alcock.
 ### Project duration
 7 days.
 
-Launch on [Heroku](https://pairshead.herokuapp.com/#/).
-
-![Main screenshot](/readme-assets/xxx.png)
+### Installation
+* Clone or download the repo
+* yarn and pipenv install to install dependencies
+* ?? do we need to create a database???
+* yarn serve:backend to run backend
+* yarn serve:frontednd to run front-end
 
 ## Brief
 
@@ -33,16 +39,21 @@ The project brief is as follows:
 * CSS3
 * JavaScript (ES6)
 * React
-* Bulma
+* Webpack
+* Python
+* Django
+* Django REST Framework
+* PostgreSQL
+* HashRouter, Route, Switch, Link  from React Router DOM
+* React Select
+* JSON Web Token
+* Axios
+* Python Dotenv
+* SCSS, Bulma
+* Git, GitHub
 * Lodash
-* HashRouter, Route, Switch, Link  from 'react-router-dom'
-* Select from 'react-select'
-* axios
-* ScSS
-* Git
-* GitHub
-* Google Fonts
-
+* Google Fonts, FortAwesome
+* Moment, Moment-duration-format
 
 ## Approach Taken
 

@@ -93,7 +93,7 @@
   "fields": {
     "name": "Unknown",
     "composite_code": "Unknown",
-    "club_id": 999999,
+    "club": 999999,
     "rowing_CRI": null,
     "rowing_CRI_max": null,
     "sculling_CRI": null,
@@ -112,7 +112,7 @@
   "fields": {
     "name": "MAA/QBC",
     "composite_code": "MAA/QBC",
-    "club_id": 228,
+    "club": 228,
     "rowing_CRI": 481,
     "rowing_CRI_max": 521,
     "sculling_CRI": 229,
@@ -131,7 +131,7 @@
   "fields": {
     "name": "BNT-SARGENT",
     "composite_code": "xx",
-    "club_id": 289,
+    "club": 289,
     "rowing_CRI": 82,
     "rowing_CRI_max": 96,
     "sculling_CRI": 71,
