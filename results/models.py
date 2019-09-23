@@ -31,7 +31,9 @@ class Crew(models.Model):
     status = models.CharField(max_length=20)
     penalty = models.IntegerField(default=0)
     handicap = models.IntegerField(default=0)
-    manual_override_time = models.IntegerField(blank=True, null=True)
+    manual_override_minutes = models.IntegerField(default=0)
+    manual_override_seconds = models.IntegerField(default=0)
+    manual_override_hundredths_seconds = models.IntegerField(default=0)
     bib_number = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -68,6 +70,11 @@ class Crew(models.Model):
         sequence = self.times.get(tap='Finish').sequence
         return sequence
 
+# Turn the three manual override fields into miliseconds
+    @property
+    def manual_override_time(self):
+        time = (self.manual_override_minutes*60*1000) + (self.manual_override_seconds*1000) + (self.manual_override_hundredths_seconds*10)
+        return time
 
 class RaceTime(models.Model):
     sequence = models.IntegerField()

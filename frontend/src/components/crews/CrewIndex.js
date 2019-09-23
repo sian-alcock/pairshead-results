@@ -195,13 +195,15 @@ class CrewIndex extends React.Component {
                 <td>Status</td>
                 <td>Club</td>
                 <td>Event</td>
-                <td>Start sequence</td>
-                <td>Finish sequence</td>
+                <td>Start seq#</td>
+                <td>Finish seq#</td>
                 <td><abbr title="Penalty">P</abbr></td>
                 <td><abbr title="Handicap">H</abbr></td>
                 <td>Start time</td>
                 <td>Finish time</td>
+                <td>Raw time</td>
                 <td>Race time</td>
+                <td>Time override</td>
               </tr>
             </thead>
             <tfoot>
@@ -211,13 +213,15 @@ class CrewIndex extends React.Component {
                 <td>Status</td>
                 <td>Club</td>
                 <td>Event</td>
-                <td>Start sequence</td>
-                <td>Finish sequence</td>
+                <td>Start seq#</td>
+                <td>Finish seq#</td>
                 <td><abbr title="Penalty">P</abbr></td>
                 <td><abbr title="Handicap">H</abbr></td>
                 <td>Start time</td>
                 <td>Finish time</td>
+                <td>Raw time</td>
                 <td>Race time</td>
+                <td>Time override</td>
               </tr>
             </tfoot>
             <tbody>
@@ -235,6 +239,8 @@ class CrewIndex extends React.Component {
                   <td>{crew.start_time ? formatTimes(crew.start_time) : '⚠️'}</td>
                   <td>{crew.finish_time ? formatTimes(crew.finish_time) : '⚠️'}</td>
                   <td>{crew.raw_time ? formatTimes(crew.raw_time) : '⚠️'}</td>
+                  <td>{crew.race_time ? formatTimes(crew.race_time) : '⚠️'}</td>
+                  <td>{crew.manual_override_time ? formatTimes(crew.manual_override_time) : ''}</td>
                 </tr>
               )}
             </tbody>

@@ -77,20 +77,60 @@ class CrewTimeEdit extends React.Component {
               />
               {this.state.errors.penalty && <small className="help is-danger">{this.state.errors.penalty}</small>}
             </div>
+            <p>Override race time</p>
 
-            <div className="field">
-              <label className="label" htmlFor="manual_override_time">Override race time</label>
-              <input
-                className="input"
-                name="manual_override_time"
-                id="manual_override_time"
-                placeholder="eg: 16:09.12"
-                value={this.state.formData.manual_override_time || ''}
-                onChange={this.handleChange}
-              />
-              {this.state.errors.manual_override_time && <small className="help is-danger">{this.state.errors.manual_override_time}</small>}
+            <div className="columns">
+              <div className="column">
+                <div className="field">
+                  <label className="label" htmlFor="manual_override_minutes">Minutes</label>
+                  <input
+                    className="input"
+                    type="number"
+                    name="manual_override_minutes"
+                    id="manual_override_minutes"
+                    min="0"
+                    max="59"
+                    value={this.state.formData.manual_override_minutes || ''}
+                    onChange={this.handleChange}
+                  />
+                  {this.state.errors.manual_override_minutes && <small className="help is-danger">{this.state.errors.manual_override_minutes}</small>}
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="field">
+                  <label className="label" htmlFor="manual_override_seconds">Seconds</label>
+                  <input
+                    className="input"
+                    type="number"
+                    name="manual_override_seconds"
+                    id="manual_override_seconds"
+                    min="0"
+                    max="59"
+                    value={this.state.formData.manual_override_seconds || ''}
+                    onChange={this.handleChange}
+                  />
+                  {this.state.errors.manual_override_seconds && <small className="help is-danger">{this.state.errors.manual_override_seconds}</small>}
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="field">
+                  <label className="label" htmlFor="manual_override_hundredths_seconds">Hundredths of seconds</label>
+                  <input
+                    className="input"
+                    type="number"
+                    name="manual_override_hundredths_seconds"
+                    id="manual_override_hundredths_seconds"
+                    min="0"
+                    max="99"
+                    value={this.state.formData.manual_override_hundredths_seconds || ''}
+                    onChange={this.handleChange}
+                  />
+                  {this.state.errors.manual_override_hundredths_seconds && <small className="help is-danger">{this.state.errors.manual_override_hundredths_seconds}</small>}
+                </div>
+              </div>
             </div>
-
 
             <br />
             <button className="button is-primary">Submit</button>

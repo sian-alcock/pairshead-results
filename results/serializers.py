@@ -23,7 +23,7 @@ class CrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'manual_override_time', 'bib_number',)
+        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'bib_number',)
 
 
 class PopulatedCrewSerializer(serializers.ModelSerializer):
@@ -38,10 +38,11 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
     finish_time = serializers.IntegerField()
     start_sequence = serializers.IntegerField()
     finish_sequence = serializers.IntegerField()
+    manual_override_time = serializers.IntegerField()
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'manual_override_time', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'event', 'club',)
+        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'event', 'club',)
 
 
 class WriteCrewSerializer(serializers.ModelSerializer):
@@ -51,7 +52,7 @@ class WriteCrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'club', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'event', 'status', 'penalty', 'handicap', 'manual_override_time',)
+        fields = ('id', 'name', 'composite_code', 'club', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'event', 'status', 'penalty', 'handicap', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds',)
 
 class WriteRaceTimesSerializer(serializers.ModelSerializer):
 
@@ -84,17 +85,6 @@ class PopulatedRaceTimesSerializer(serializers.ModelSerializer):
         model = RaceTime
         fields = ('id', 'sequence', 'bib_number', 'tap', 'time_tap', 'crew',)
 
-    # def validate_crew_id(self, value):
-    #     # relies on there being a crew with id 999999 = unknown
-    #
-    #     try:
-    #         value = Crew.objects.get(pk=int(value))
-    #     # if crew_id not found, set to crew 999999
-    #
-    #     except Crew.DoesNotExist:
-    #         value = Crew.objects.get(pk=999999)
-    #
-    #     return value
 
 class WriteClubSerializer(serializers.ModelSerializer):
 
