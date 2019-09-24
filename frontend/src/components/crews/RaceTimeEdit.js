@@ -27,7 +27,7 @@ class RaceTimeEdit extends React.Component {
     ]).then(([res1, res2]) => {
       console.log(res1.data, res2.data)
       this.setState({ formData: res1.data, crews: res2.data.map(option => {
-        return {label: option.name, value: option.id}
+        return {label: `${option.name} | ${option.id} | ${option.bib_number}`, value: option.id}
       })
       })
     })
@@ -73,7 +73,7 @@ class RaceTimeEdit extends React.Component {
               </div>
 
               <div className="column is-one-third">
-                <div>Race time: {formatTimes(this.state.formData.time_tap)}</div>
+                <div>Tap time: {formatTimes(this.state.formData.time_tap)}</div>
               </div>
 
             </div>
@@ -87,7 +87,7 @@ class RaceTimeEdit extends React.Component {
                   id="crew"
                   onChange={this.handleSelectChange}
                   options={this.state.crews}
-                  value = {this.state.formData.crew}
+                  value={!this.state.formData.crew ? '' : this.state.crews.find(option => option.value === this.state.formData.crew.id)}
                 />
               </div>
             </div>
