@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import CrewLoader from '../common/ImportCrewData'
 import TimeLoader from '../common/ImportTimeData'
+// import DownLoader from '../common/Downloader'
 
 class Home extends React.Component {
   constructor() {
@@ -15,6 +16,7 @@ class Home extends React.Component {
     this.getCrewsWithoutTimes = this.getCrewsWithoutTimes.bind(this)
     this.getTotalCrews = this.getTotalCrews.bind(this)
     this.getScratchedCrewsWithTimes = this.getScratchedCrewsWithTimes.bind(this)
+    this.exportCrewData = this.exportCrewData.bind(this)
   }
 
   componentDidMount() {
@@ -51,6 +53,10 @@ class Home extends React.Component {
     return acceptedCrews.length
   }
 
+  exportCrewData(){
+    window.open('api/crew-data-export/')
+  }
+
   render() {
 
     return (
@@ -66,7 +72,11 @@ class Home extends React.Component {
             </div>
 
             <div className="column has-text-centered">
-              <Link to="/race-times">
+              <Link
+                to={{
+                  pathname: '/race-times',
+                  state: { startTab: true, finishTab: false }
+                }}>
                 <button className="button is-primary">
                   Fix Start Sequence
                 </button>
@@ -74,7 +84,11 @@ class Home extends React.Component {
             </div>
 
             <div className="column has-text-centered">
-              <Link to="/race-times">
+              <Link
+                to={{
+                  pathname: '/race-times',
+                  state: { startTab: false, finishTab: true }
+                }}>
                 <button className="button is-primary">
                 Fix Finish Sequence
                 </button>
@@ -144,7 +158,7 @@ class Home extends React.Component {
               <button className="button is-primary">Calculate Handicaps</button>
             </div>
             <div className="column has-text-centered">
-              <button className="button is-primary">Publish to GoogleDrive</button>
+              <button className="button is-primary" onClick={this.exportCrewData}>Export crew data</button>
             </div>
             <div className="column has-text-centered">
               <button className="button is-primary">Submit BROE Results</button>

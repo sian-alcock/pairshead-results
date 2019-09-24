@@ -1,7 +1,7 @@
 import csv
 import os
 import requests
-from django.http import Http404
+from django.http import Http404, HttpResponse
 # from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -248,7 +248,7 @@ class CrewDataImport(APIView):
 
 
 class CrewRaceTimesImport(APIView):
-    # Start by deleting all existing crews
+    # Start by deleting all existing times
 
     def get(self, _request):
         RaceTime.objects.all().delete()
@@ -278,3 +278,23 @@ class CrewRaceTimesImport(APIView):
 
             serializer = RaceTimesSerializer(race_times, many=True)
             return Response(serializer.data)
+
+
+class CrewDataExport(APIView):
+
+    def get(self, _request):
+
+        crews = Crew.objects.all()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
+
+        writer = csv.writer(response, delimiter=',')
+        writer.writerow(['name', 'id', 'composite_code', 'club', 'event',])
+
+        for crew in crews:
+            writer.writerow([crew.name, crew.id, crew.composite_code, crew.club.name, crew.event.name])
+
+        return response
+
+        # serializer = PopulatedCrewSerializer(crews, many=True)
+        # return Response(serializer.data)
