@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-// import { formatTimes } from '../../../lib/helpers'
+import { formatTimes } from '../../lib/helpers'
 
 class CrewTimeEdit extends React.Component {
   constructor() {
@@ -135,6 +135,25 @@ class CrewTimeEdit extends React.Component {
             <br />
             <button className="button is-primary">Submit</button>
           </form>
+
+          <div className="box">
+            <div className="columns is-multiline">
+
+              <div className="column is-one-third">
+                <div>Start tap: {!this.state.formData.start_time ? '⚠️' : formatTimes(this.state.formData.start_time)}</div>
+              </div>
+
+              <div className="column is-one-third">
+                <div>Finish tap: {!this.state.formData.finish_time ? '⚠️' : formatTimes(this.state.formData.finish_time)}</div>
+              </div>
+
+              <div className="column is-one-third">
+                <div>Raw time: {!this.state.formData.raw_time ? '⚠️' : formatTimes(this.state.formData.raw_time)}</div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </section>
     )

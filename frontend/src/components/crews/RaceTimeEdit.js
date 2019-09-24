@@ -27,7 +27,7 @@ class RaceTimeEdit extends React.Component {
     ]).then(([res1, res2]) => {
       console.log(res1.data, res2.data)
       this.setState({ formData: res1.data, crews: res2.data.map(option => {
-        return {label: `${option.name} | ${option.id} | ${option.bib_number}`, value: option.id}
+        return {label: '', value: null}, {label: `${option.name} | ${option.id} | ${option.bib_number}`, value: option.id}
       })
       })
     })
