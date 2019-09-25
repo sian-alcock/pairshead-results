@@ -77,6 +77,13 @@ class RaceTimeDetailView(APIView):
 class CrewListView(APIView): # extend the APIView
     # pagination_class = LimitOffsetPagination
 
+    # def get(self, _request, page):
+    #     page_size = 25
+    #     first_crew = page * page_size
+    #     crews = Crew.objects.all()[first_crew : first_crew + page_size]
+    #     serializer = PopulatedCrewSerializer(crews, many=True)
+    #     return Response(serializer.data)
+
     def get(self, _request):
         crews = Crew.objects.filter(status__in=('Scratched', 'Accepted')) # get all the crews
         serializer = PopulatedCrewSerializer(crews, many=True)

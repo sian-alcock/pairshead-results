@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 import { formatTimes } from '../../lib/helpers'
+import Paginator from '../common/Paginator'
 
 const _ = require('lodash').runInContext()
 
@@ -12,6 +13,9 @@ class CrewIndex extends React.Component {
     super()
     this.state = {
       crews: [],
+      crewsToDisplay: [],
+      pageSize: 25,
+      pageIndex: 0,
       searchTerm: '',
       sortTerm: 'finish_sequence|asc',
       crewsWithoutStartTimeBoolean: false,
@@ -19,7 +23,7 @@ class CrewIndex extends React.Component {
       handleScratchedCrewsBoolean: true
     }
 
-    // this.formatTimes = this.formatTimes.bind(this)
+
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
     this.handleSortChange = this.handleSortChange.bind(this)
     this.combineFiltersAndSort = this.combineFiltersAndSort.bind(this)
@@ -29,6 +33,7 @@ class CrewIndex extends React.Component {
     this.getNumCrewsWithoutFinishTimes = this.getNumCrewsWithoutFinishTimes.bind(this)
     this.handleScratchedCrews = this.handleScratchedCrews.bind(this)
     this.getNumScratchedCrews = this.getNumScratchedCrews.bind(this)
+    this.changePage = this.changePage.bind(this)
   }
 
   componentDidMount() {
@@ -37,6 +42,14 @@ class CrewIndex extends React.Component {
         { crews: res.data, crewsToDisplay: res.data },
         () => this.combineFiltersAndSort(this.state.crews))
       )
+  }
+
+  changePage(pageIndex, totalPages) {
+    if (
+      pageIndex > totalPages ||
+    pageIndex < 0
+    ) return null
+    this.setState({ pageIndex })
   }
 
   getNumCrewsWithoutStartTimes(){
@@ -124,7 +137,8 @@ class CrewIndex extends React.Component {
 
   render() {
 
-    console.log(this.state.crewsToDisplay)
+    !this.state.crewsToDisplay ? <h2>loading...</h2> : console.log(this.state.crewsToDisplay)
+    const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
 
     return (
       <section className="section">
@@ -187,6 +201,12 @@ class CrewIndex extends React.Component {
             </div>
           </div>
 
+          <Paginator
+            pageIndex={this.state.pageIndex}
+            totalPages={totalPages}
+            changePage={this.changePage}
+          />
+
           <table className="table">
             <thead>
               <tr>
@@ -246,19 +266,11 @@ class CrewIndex extends React.Component {
             </tbody>
           </table>
 
-          <nav className="pagination is-small" role="navigation" aria-label="pagination">
-            <a className="pagination-previous">Previous</a>
-            <a className="pagination-next">Next page</a>
-            <ul className="pagination-list">
-              <li><a className="pagination-link" aria-label="Goto page 1">1</a></li>
-              <li><span className="pagination-ellipsis">&hellip;</span></li>
-              <li><a className="pagination-link" aria-label="Goto page 45">45</a></li>
-              <li><a className="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
-              <li><a className="pagination-link" aria-label="Goto page 47">47</a></li>
-              <li><span className="pagination-ellipsis">&hellip;</span></li>
-              <li><a className="pagination-link" aria-label="Goto page 86">86</a></li>
-            </ul>
-          </nav>
+          <Paginator
+            pageIndex={this.state.pageIndex}
+            totalPages={totalPages}
+            changePage={this.changePage}
+          />
 
         </div>
       </section>
