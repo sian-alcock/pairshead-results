@@ -14,7 +14,7 @@ class CrewIndex extends React.Component {
     this.state = {
       crews: [],
       crewsToDisplay: [],
-      pageSize: 25,
+      pageSize: 20,
       pageIndex: 0,
       searchTerm: '',
       sortTerm: 'finish_sequence|asc',
@@ -139,6 +139,7 @@ class CrewIndex extends React.Component {
 
     !this.state.crewsToDisplay ? <h2>loading...</h2> : console.log(this.state.crewsToDisplay)
     const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
+    const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
 
     return (
       <section className="section">
@@ -245,7 +246,7 @@ class CrewIndex extends React.Component {
               </tr>
             </tfoot>
             <tbody>
-              {this.state.crewsToDisplay && this.state.crewsToDisplay.map(crew =>
+              {pagedCrews.map(crew =>
                 <tr key={crew.id}>
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
                   <td>{crew.name}</td>

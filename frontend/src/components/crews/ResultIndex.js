@@ -2,19 +2,31 @@ import React from 'react'
 import axios from 'axios'
 import { formatTimes } from '../../lib/helpers'
 import Img from 'react-image'
+import Paginator from '../common/Paginator'
 
 class ResultIndex extends React.Component {
   constructor() {
     super()
     this.state= {
-      crews: []
+      crews: [],
+      pageSize: 20,
+      pageIndex: 0
     }
     this.getCrewsToDisplay = this.getCrewsToDisplay.bind(this)
+    this.changePage = this.changePage.bind(this)
   }
 
   componentDidMount() {
     axios.get('/api/crews/')
       .then(res => this.setState({ crews: res.data }))
+  }
+
+  changePage(pageIndex, totalPages) {
+    if (
+      pageIndex > totalPages ||
+    pageIndex < 0
+    ) return null
+    this.setState({ pageIndex })
   }
 
   getCrewsToDisplay() {
@@ -32,9 +44,19 @@ class ResultIndex extends React.Component {
 
   render() {
 
+    const totalPages = Math.floor((this.getCrewsToDisplay().length - 1) / this.state.pageSize)
+    const pagedCrews = this.getCrewsToDisplay().slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
+
     return (
       <section className="section">
         <div className="container">
+
+          <Paginator
+            pageIndex={this.state.pageIndex}
+            totalPages={totalPages}
+            changePage={this.changePage}
+          />
+
 
           <table className="table">
             <thead>
@@ -60,7 +82,7 @@ class ResultIndex extends React.Component {
               </tr>
             </tfoot>
             <tbody>
-              {this.getCrewsToDisplay().map((crew, i) =>
+              {pagedCrews.map((crew, i) =>
                 <tr key={crew.id}>
                   <td>{i += 1}</td>
                   <td>{crew.id}</td>
@@ -74,6 +96,12 @@ class ResultIndex extends React.Component {
               )}
             </tbody>
           </table>
+
+          <Paginator
+            pageIndex={this.state.pageIndex}
+            totalPages={totalPages}
+            changePage={this.changePage}
+          />
 
         </div>
       </section>

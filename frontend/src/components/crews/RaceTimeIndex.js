@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { formatTimes } from '../../lib/helpers'
 const _ = require('lodash').runInContext()
+import Paginator from '../common/Paginator'
 
 class RaceTimeIndex extends React.Component {
   constructor() {
@@ -10,6 +11,8 @@ class RaceTimeIndex extends React.Component {
     this.state= {
       raceTimes: [],
       raceTimesToDisplay: [],
+      pageSize: 20,
+      pageIndex: 0,
       searchTerm: '',
       timesWithoutCrewBoolean: false,
       startTab: true,
@@ -22,11 +25,20 @@ class RaceTimeIndex extends React.Component {
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
     this.handleTimesWithoutCrew = this.handleTimesWithoutCrew.bind(this)
     this.combineFilters = this.combineFilters.bind(this)
+    this.changePage = this.changePage.bind(this)
   }
 
   componentDidMount() {
     axios.get('/api/race-times/')
       .then(res => this.setState({ raceTimes: res.data, raceTimesToDisplay: res.data.filter(data => data.tap === 'Start')}))
+  }
+
+  changePage(pageIndex, totalPages) {
+    if (
+      pageIndex > totalPages ||
+    pageIndex < 0
+    ) return null
+    this.setState({ pageIndex })
   }
 
   displayStartTimes(){
@@ -91,7 +103,9 @@ class RaceTimeIndex extends React.Component {
 
   render() {
 
-    // console.log(this.state.raceTimesToDisplay)
+    !this.state.raceTimesToDisplay ? <h2>loading...</h2> : console.log(this.state.raceTimesToDisplay)
+    const totalPages = Math.floor((this.state.raceTimesToDisplay.length - 1) / this.state.pageSize)
+    const pagedRaceTimes = this.state.raceTimesToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
 
     return (
       <section className="section">
@@ -120,6 +134,12 @@ class RaceTimeIndex extends React.Component {
             </label>
           </div>
 
+          <Paginator
+            pageIndex={this.state.pageIndex}
+            totalPages={totalPages}
+            changePage={this.changePage}
+          />
+
           <table className="table">
             <thead>
               <tr>
@@ -142,7 +162,7 @@ class RaceTimeIndex extends React.Component {
               </tr>
             </tfoot>
             <tbody>
-              {this.state.raceTimesToDisplay.map(raceTime =>
+              {pagedRaceTimes.map(raceTime =>
                 <tr key={raceTime.id}>
                   <td><Link to={`/race-times/${raceTime.id}`}>{raceTime.sequence}</Link></td>
                   <td>{raceTime.tap}</td>
@@ -155,6 +175,13 @@ class RaceTimeIndex extends React.Component {
               )}
             </tbody>
           </table>
+
+          <Paginator
+            pageIndex={this.state.pageIndex}
+            totalPages={totalPages}
+            changePage={this.changePage}
+          />
+
         </div>
 
       </section>

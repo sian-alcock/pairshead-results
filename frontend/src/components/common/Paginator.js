@@ -3,8 +3,7 @@ import React from 'react'
 const Paginator = ({ pageIndex, totalPages, changePage }) => {
   return (
     <div>
-      <hr />
-      <nav className="pagination is-small" role="navigation" aria-label="pagination">
+      <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
         <a
           className="pagination-previous"
           onClick={() => changePage(pageIndex-1, totalPages)}
