@@ -97,7 +97,7 @@ class RaceTimeIndex extends React.Component {
     _.indexOf = _.findIndex
     filteredTimes = _.intersection(this.state.raceTimes,  filteredBySearchText, filteredByTimesWithoutCrew, filteredByTap)
 
-    return this.setState({ raceTimesToDisplay: filteredTimes })
+    return this.setState({ raceTimesToDisplay: filteredTimes, pageIndex: 0 })
 
   }
 

@@ -131,7 +131,7 @@ class CrewIndex extends React.Component {
 
     const [field, order] = this.state.sortTerm.split('|')
     const sortedCrews = _.orderBy(filteredCrews, [field], [order])
-    return this.setState({ crewsToDisplay: sortedCrews })
+    return this.setState({ crewsToDisplay: sortedCrews, pageIndex: 0 })
 
   }
 
