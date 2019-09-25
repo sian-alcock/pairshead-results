@@ -41,6 +41,9 @@ class Crew(models.Model):
 
     @property
     def raw_time(self):
+        if len(self.times.filter(tap='Start')) > 1 or len(self.times.filter(tap='Finish')) > 1:
+            return 0
+
         start = self.times.get(tap='Start').time_tap
         end = self.times.get(tap='Finish').time_tap
         return end - start
@@ -52,21 +55,30 @@ class Crew(models.Model):
 
     @property
     def start_time(self):
+        if len(self.times.filter(tap='Start')) > 1:
+            return 0
+
         start = self.times.get(tap='Start').time_tap
         return start
 
     @property
     def finish_time(self):
+        if len(self.times.filter(tap='Finish')) > 1:
+            return 0
         finish = self.times.get(tap='Finish').time_tap
         return finish
 
     @property
     def start_sequence(self):
+        if len(self.times.filter(tap='Start')) > 1:
+            return 0
         sequence = self.times.get(tap='Start').sequence
         return sequence
 
     @property
     def finish_sequence(self):
+        if len(self.times.filter(tap='Finish')) > 1:
+            return 0
         sequence = self.times.get(tap='Finish').sequence
         return sequence
 
