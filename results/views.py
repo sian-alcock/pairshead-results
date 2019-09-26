@@ -362,10 +362,10 @@ class CrewDataExport(APIView):
         response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
 
         writer = csv.writer(response, delimiter=',')
-        writer.writerow(['name', 'id', 'composite_code', 'club', 'event', ])
+        writer.writerow(['name', 'id', 'status', 'composite_code', 'club', 'event', 'competitors', ])
 
         for crew in crews:
-            writer.writerow([crew.name, crew.id, crew.composite_code, crew.club.name, crew.event.name, ])
+            writer.writerow([crew.name, crew.id, crew.status, crew.composite_code, crew.club.name, crew.event.name, crew.competitor_names, ])
 
         return response
 

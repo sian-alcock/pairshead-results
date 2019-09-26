@@ -48,6 +48,15 @@ class Crew(models.Model):
         return self.name
 
     @property
+    def competitor_names(self):
+        if not self.competitors:
+            return 0
+
+        competitor_list = list(map(lambda competitor: competitor.last_name, self.competitors.all()))
+        value = ' / '.join(competitor_list)
+        return value
+
+    @property
     def raw_time(self):
         if len(self.times.filter(tap='Start')) > 1 or len(self.times.filter(tap='Finish')) > 1:
             return 0
