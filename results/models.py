@@ -16,6 +16,12 @@ class Event(models.Model):
     type = models.CharField(max_length=30, blank=True, null=True)
     gender = models.CharField(max_length=20, blank=True, null=True)
 
+class Band(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=30)
+    event = models.ForeignKey(Event, related_name='bands',
+    on_delete=models.CASCADE)
+
 class Crew(models.Model):
     name = models.CharField(max_length=50)
     id = models.IntegerField(primary_key=True)
@@ -35,6 +41,8 @@ class Crew(models.Model):
     manual_override_seconds = models.IntegerField(default=0)
     manual_override_hundredths_seconds = models.IntegerField(default=0)
     bib_number = models.IntegerField(blank=True, null=True)
+    band = models.ForeignKey(Band, related_name='bands',
+    on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -87,6 +95,13 @@ class Crew(models.Model):
     def manual_override_time(self):
         time = (self.manual_override_minutes*60*1000) + (self.manual_override_seconds*1000) + (self.manual_override_hundredths_seconds*10)
         return time
+
+class Competitor(models.Model):
+    last_name = models.CharField(max_length=50)
+    gender = models.CharField(max_length=10)
+    substitution = models.BooleanField(blank=True, null=True,)
+    crew = models.ForeignKey(Crew, related_name='competitors',
+    on_delete=models.SET_NULL, blank=True, null=True,)
 
 class RaceTime(models.Model):
     sequence = models.IntegerField()

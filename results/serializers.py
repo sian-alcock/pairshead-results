@@ -1,12 +1,22 @@
 import re
 from rest_framework import serializers
-from .models import Club, Event, Crew, RaceTime
+from .models import Club, Event, Band, Crew, RaceTime, Competitor
 
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'name', 'override_name', 'info', 'type', 'gender',)
+
+class BandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Band
+        fields = ('id', 'name', 'event',)
+
+class CompetitorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Competitor
+        fields = ('last_name', 'gender', 'crew',)
 
 class ClubSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +40,8 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
 
     club = ClubSerializer()
     event = EventSerializer()
+    band = BandSerializer()
+    competitors = CompetitorSerializer(many=True)
 
     times = RaceTimesSerializer(many=True)
     raw_time = serializers.IntegerField()
@@ -42,17 +54,14 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'event', 'club',)
+        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'event', 'club', 'band', 'competitors')
 
 
 class WriteCrewSerializer(serializers.ModelSerializer):
 
-    # club = serializers.CharField(max_length=20)
-    # event = serializers.CharField(max_length=20)
-
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'club', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'event', 'status', 'penalty', 'handicap', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds',)
+        fields = ('id', 'name', 'composite_code', 'club', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'event', 'status', 'band_id', 'bib_number')
 
 class WriteRaceTimesSerializer(serializers.ModelSerializer):
 

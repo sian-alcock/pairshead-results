@@ -8,8 +8,9 @@ from rest_framework.response import Response
 
 # from pprint import pprint
 
-from .serializers import CrewSerializer, PopulatedCrewSerializer, WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer, WriteCrewSerializer, WriteClubSerializer, ClubSerializer, EventSerializer
-from .models import Club, Event, Crew, RaceTime
+from .serializers import CrewSerializer, PopulatedCrewSerializer, WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer, WriteCrewSerializer, WriteClubSerializer, ClubSerializer, EventSerializer, BandSerializer, CompetitorSerializer
+
+from .models import Club, Event, Band, Crew, RaceTime, Competitor
 
 class ClubListView(APIView): # extend the APIView
 
@@ -75,14 +76,6 @@ class RaceTimeDetailView(APIView):
         return Response(status=204)
 
 class CrewListView(APIView): # extend the APIView
-    # pagination_class = LimitOffsetPagination
-
-    # def get(self, _request, page):
-    #     page_size = 25
-    #     first_crew = page * page_size
-    #     crews = Crew.objects.all()[first_crew : first_crew + page_size]
-    #     serializer = PopulatedCrewSerializer(crews, many=True)
-    #     return Response(serializer.data)
 
     def get(self, _request):
         crews = Crew.objects.filter(status__in=('Scratched', 'Accepted')) # get all the crews
@@ -135,7 +128,7 @@ class ClubDataImport(APIView):
         # Start by deleting all existing clubs
         Club.objects.all().delete()
 
-        Meeting = os.getenv("MEETING2018") # Competition Meeting API
+        Meeting = os.getenv("MEETING2019") # Competition Meeting API
         UserAPI = os.getenv("USERAPI") # As supplied in email
         UserAuth = os.getenv("USERAUTH") # As supplied in email
 
@@ -173,11 +166,9 @@ class EventDataImport(APIView):
     def get(self, _request):
         # Start by deleting all existing events
         Event.objects.all().delete()
-        #
-        # Event.objects.create('id'=999999, 'name'='Unknown', 'override_name'='Unknown',
-        # 'info'='Unknown', 'type'='Unknown', 'gender'='Unknown',)
 
-        Meeting = os.getenv("MEETING2018") # Competition Meeting API
+
+        Meeting = os.getenv("MEETING2019") # Competition Meeting API
         UserAPI = os.getenv("USERAPI") # As supplied in email
         UserAuth = os.getenv("USERAUTH") # As supplied in email
 
@@ -209,6 +200,43 @@ class EventDataImport(APIView):
 
         return Response(status=400)
 
+class BandDataImport(APIView):
+
+    def get(self, _request):
+        # Start by deleting all existing bands
+        Band.objects.all().delete()
+
+
+        Meeting = os.getenv("MEETING2019") # Competition Meeting API
+        UserAPI = os.getenv("USERAPI") # As supplied in email
+        UserAuth = os.getenv("USERAUTH") # As supplied in email
+
+        header = {'Authorization':UserAuth}
+        request = {'api_key':UserAPI, 'meetingIdentifier':Meeting}
+        url = 'https://webapi.britishrowing.org/api/OE2MeetingSetup' # change ENDPOINTNAME for the needed endpoint eg OE2MeetingSetup
+
+        r = requests.post(url, json=request, headers=header)
+        if r.status_code == 200:
+            # pprint(r.json())
+
+            for band in r.json()['eventBands']:
+                data = {
+                    'name': band['bandName'],
+                    'id': band['group1Id'],
+                    'event': band['eventId'],
+                }
+
+                serializer = BandSerializer(data=data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+            bands = Band.objects.all()
+            serializer = BandSerializer(bands, many=True)
+            return Response(serializer.data)
+
+        return Response(status=400)
+
+
 class CrewDataImport(APIView):
 
     def get(self, _request):
@@ -216,7 +244,7 @@ class CrewDataImport(APIView):
         Crew.objects.all().delete()
         RaceTime.objects.all().delete()
 
-        Meeting = os.getenv("MEETING2018") # Competition Meeting API from the Information --> API Key menu
+        Meeting = os.getenv("MEETING2019") # Competition Meeting API from the Information --> API Key menu
         UserAPI = os.getenv("USERAPI") # As supplied in email
         UserAuth = os.getenv("USERAUTH") # As supplied in email
 
@@ -241,6 +269,8 @@ class CrewDataImport(APIView):
                     'sculling_CRI_max': crew['scullingCRIMax'],
                     'event': crew['eventId'],
                     'status': crew['status'],
+                    'bib_number': crew['customCrewNumber'],
+                    'band_id': crew['bandId'],
                 }
 
                 serializer = WriteCrewSerializer(data=data)
@@ -249,6 +279,42 @@ class CrewDataImport(APIView):
 
             crews = Crew.objects.all()
             serializer = WriteCrewSerializer(crews, many=True)
+            return Response(serializer.data)
+
+        return Response(status=400)
+
+class CompetitorDataImport(APIView):
+
+    def get(self, _request):
+        # Start by deleting all existing crews and times
+        Competitor.objects.all().delete()
+
+        Meeting = os.getenv("MEETING2019") # Competition Meeting API from the Information --> API Key menu
+        UserAPI = os.getenv("USERAPI") # As supplied in email
+        UserAuth = os.getenv("USERAUTH") # As supplied in email
+
+        header = {'Authorization':UserAuth}
+        request = {'api_key':UserAPI, 'meetingIdentifier':Meeting}
+        url = 'https://webapi.britishrowing.org/api/OE2CrewInformation' # change ENDPOINTNAME for the needed endpoint eg OE2MeetingSetup
+
+        r = requests.post(url, json=request, headers=header)
+        if r.status_code == 200:
+            # pprint(r.json())
+
+            for competitor in r.json()['competitors']:
+
+                data = {
+                    'last_name': competitor['surname'],
+                    'gender': competitor['gender'],
+                    'crew': competitor['crewId'],
+                }
+
+                serializer = CompetitorSerializer(data=data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+            competitors = Competitor.objects.all()
+            serializer = CompetitorSerializer(competitors, many=True)
             return Response(serializer.data)
 
         return Response(status=400)
@@ -296,10 +362,10 @@ class CrewDataExport(APIView):
         response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
 
         writer = csv.writer(response, delimiter=',')
-        writer.writerow(['name', 'id', 'composite_code', 'club', 'event',])
+        writer.writerow(['name', 'id', 'composite_code', 'club', 'event', ])
 
         for crew in crews:
-            writer.writerow([crew.name, crew.id, crew.composite_code, crew.club.name, crew.event.name])
+            writer.writerow([crew.name, crew.id, crew.composite_code, crew.club.name, crew.event.name, ])
 
         return response
 

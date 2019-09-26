@@ -213,9 +213,12 @@ class CrewIndex extends React.Component {
               <tr>
                 <td>Crew ID</td>
                 <td>Crew</td>
+                <td>Competitors</td>
                 <td>Status</td>
+                <td>Boat number</td>
                 <td>Club</td>
                 <td>Event</td>
+                <td>Band</td>
                 <td>Start seq#</td>
                 <td>Finish seq#</td>
                 <td><abbr title="Penalty">P</abbr></td>
@@ -231,9 +234,12 @@ class CrewIndex extends React.Component {
               <tr>
                 <td>Crew ID</td>
                 <td>Crew</td>
+                <td>Competitors</td>
                 <td>Status</td>
+                <td>Boat number</td>
                 <td>Club</td>
                 <td>Event</td>
+                <td>Band</td>
                 <td>Start seq#</td>
                 <td>Finish seq#</td>
                 <td><abbr title="Penalty">P</abbr></td>
@@ -250,9 +256,12 @@ class CrewIndex extends React.Component {
                 <tr key={crew.id}>
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
                   <td>{crew.name}</td>
+                  <td>{!crew.competitors ? '' : crew.competitors[0]['last_name'] + ' / ' + crew.competitors[1]['last_name']}</td>
                   <td>{crew.status}</td>
+                  <td>{!crew.bib_number ? '' : crew.bib_number}</td>
                   <td>{crew.club.index_code}</td>
                   <td>{crew.event.name}</td>
+                  <td>{!crew.band ? '' : crew.band.name}</td>
                   <td>{crew.start_sequence ? crew.start_sequence : '⚠️'}</td>
                   <td>{crew.finish_sequence ? crew.finish_sequence : '⚠️'}</td>
                   <td>{crew.penalty}</td>

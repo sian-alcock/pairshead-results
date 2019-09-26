@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CrewListView, CrewDetailView, RaceTimeListView, RaceTimeDetailView, CrewRaceTimesImport, ClubListView, EventListView, CrewDataImport, CrewDataExport, EventDataImport, ClubDataImport
+from .views import CrewListView, CrewDetailView, RaceTimeListView, RaceTimeDetailView, CrewRaceTimesImport, ClubListView, EventListView, BandDataImport, CrewDataImport, CrewDataExport, EventDataImport, ClubDataImport, CompetitorDataImport
 
 urlpatterns = [
     path('crews/<int:pk>', CrewDetailView.as_view(), name='crews-detail'),
@@ -14,5 +14,7 @@ urlpatterns = [
     path('crew-data-export/', CrewDataExport.as_view()),
     path('club-data-import/', ClubDataImport.as_view()),
     path('event-data-import/', EventDataImport.as_view()),
+    path('band-data-import/', BandDataImport.as_view()),
+    path('competitor-data-import/', CompetitorDataImport.as_view()),
     path('', CrewListView.as_view()),
 ]
