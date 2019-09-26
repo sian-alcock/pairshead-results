@@ -256,7 +256,7 @@ class CrewIndex extends React.Component {
                 <tr key={crew.id}>
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
                   <td>{crew.name}</td>
-                  <td>{!crew.competitors ? '' : crew.competitors[0]['last_name'] + ' / ' + crew.competitors[1]['last_name']}</td>
+                  <td>{!crew.competitor_names ? '' : crew.competitor_names}</td>
                   <td>{crew.status}</td>
                   <td>{!crew.bib_number ? '' : crew.bib_number}</td>
                   <td>{crew.club.index_code}</td>

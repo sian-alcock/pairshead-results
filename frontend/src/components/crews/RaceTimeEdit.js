@@ -18,6 +18,7 @@ class RaceTimeEdit extends React.Component {
 
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.getCrewOptions = this.getCrewOptions.bind(this)
   }
 
   componentDidMount() {
@@ -27,7 +28,7 @@ class RaceTimeEdit extends React.Component {
     ]).then(([res1, res2]) => {
       console.log(res1.data, res2.data)
       this.setState({ formData: res1.data, crews: res2.data.map(option => {
-        return {label: '', value: ''}, {label: `${option.name} | ${option.id} | ${option.bib_number}`, value: option.id}
+        return {label: `${option.name} | ${option.id} | ${option.bib_number}`, value: option.id}
       })
       })
     })
@@ -53,11 +54,16 @@ class RaceTimeEdit extends React.Component {
     this.setState({ formData })
   }
 
+  getCrewOptions(){
+    const options = [{label: '', value: ''}, ...this.state.crews]
+    return options
+  }
+
 
   render() {
     if(!this.state.formData) return null
-    console.log('crews', this.state.crews)
     {!this.state.crews && <h2>Loading</h2>}
+
     return (
       <section className="section">
         <div className="container">
@@ -86,7 +92,7 @@ class RaceTimeEdit extends React.Component {
                 <Select
                   id="crew"
                   onChange={this.handleSelectChange}
-                  options={this.state.crews}
+                  options={this.getCrewOptions()}
                   value={!this.state.formData.crew ? '' : this.state.crews.find(option => option.value === this.state.formData.crew.id)}
                 />
               </div>
