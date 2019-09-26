@@ -338,7 +338,6 @@ class CrewRaceTimesImport(APIView):
                 if row:
                     data = {
                         'sequence': row[0],
-                        'bib_number': row[1] or None,
                         'tap': row[3] or None,
                         'time_tap': row[4],
                         'crew':row[8] or None

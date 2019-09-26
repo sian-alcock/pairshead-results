@@ -167,7 +167,7 @@ class RaceTimeIndex extends React.Component {
                   <td><Link to={`/race-times/${raceTime.id}`}>{raceTime.sequence}</Link></td>
                   <td>{raceTime.tap}</td>
                   <td>{formatTimes(raceTime.time_tap)}</td>
-                  <td>{raceTime.bib_number === null ? '⚠️' : raceTime.bib_number}</td>
+                  <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.bib_number}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.id}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.name}</td>
 

@@ -27,7 +27,7 @@ class RaceTimesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RaceTime
-        fields = ('id', 'sequence', 'bib_number', 'tap', 'time_tap', 'crew',)
+        fields = ('id', 'sequence', 'tap', 'time_tap', 'crew',)
 
 class CrewSerializer(serializers.ModelSerializer):
 
