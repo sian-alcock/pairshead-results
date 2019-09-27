@@ -12,7 +12,7 @@ class CrewLoader extends Component {
     }
 
     this.getData = this.getData.bind(this)
-    
+
   }
 
   async getData() {
