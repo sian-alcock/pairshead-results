@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
-import dj_database_url
+# import dj_database_url
 from dotenv import load_dotenv
 import django_heroku
 load_dotenv()
@@ -135,4 +135,4 @@ REST_FRAMEWORK = {
 }
 
 django_heroku.settings(locals())
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
