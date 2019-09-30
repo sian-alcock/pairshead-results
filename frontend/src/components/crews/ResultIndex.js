@@ -10,10 +10,13 @@ class ResultIndex extends React.Component {
     this.state= {
       crews: [],
       pageSize: 20,
-      pageIndex: 0
+      pageIndex: 0,
+      crewsInCategory: []
     }
     this.getCrewsToDisplay = this.getCrewsToDisplay.bind(this)
     this.changePage = this.changePage.bind(this)
+    this.getCrewsInCategory = this.getCrewsInCategory.bind(this)
+    // this.getRank = this.getRank.bind(this)
   }
 
   componentDidMount() {
@@ -32,7 +35,6 @@ class ResultIndex extends React.Component {
   getCrewsToDisplay() {
     const filteredCrews = this.state.crews.filter(crew => crew.raw_time !== null)
     const crewsToDisplay = filteredCrews.sort((a, b) => (a.race_time > b.race_time) ? 1 : -1)
-    console.log('crewstodisplay', crewsToDisplay)
     return crewsToDisplay
   }
 
@@ -42,12 +44,25 @@ class ResultIndex extends React.Component {
     />
   }
 
-  render() {
+  getRank(crew, crews) {
+    const raceTimes = crews.map(crew => crew.race_time)
+    const sorted = raceTimes.slice().sort((a,b) => a - b)
+    const rank = sorted.indexOf(crew.race_time) + 1
+    return rank
+  }
 
+  getCrewsInCategory(event, crewsToDisplay){
+    const crewsInCategory = crewsToDisplay.filter(crew => crew.event_band === event)
+    return crewsInCategory
+  }
+
+  render() {
     const totalPages = Math.floor((this.getCrewsToDisplay().length - 1) / this.state.pageSize)
     const pagedCrews = this.getCrewsToDisplay().slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
+    console.log(this.getCrewsToDisplay())
 
     return (
+
       <section className="section">
         <div className="container">
 
@@ -67,6 +82,7 @@ class ResultIndex extends React.Component {
                 <td>Crew</td>
                 <td>Time</td>
                 <td>Event</td>
+                <td>Pos in category</td>
                 <td>Penalty</td>
               </tr>
             </thead>
@@ -78,19 +94,21 @@ class ResultIndex extends React.Component {
                 <td>Crew</td>
                 <td>Time</td>
                 <td>Event</td>
+                <td>Pos in category</td>
                 <td>Penalty</td>
               </tr>
             </tfoot>
             <tbody>
-              {pagedCrews.map((crew, i) =>
+              {pagedCrews.map((crew) =>
                 <tr key={crew.id}>
-                  <td>{i += 1}</td>
+                  <td>{this.getRank(crew, this.getCrewsToDisplay())}</td>
                   <td>{crew.id}</td>
                   <td><img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" /></td>
                   <td>{crew.club.name}</td>
                   <td>{crew.name}</td>
                   <td>{formatTimes(crew.race_time)}</td>
-                  <td>{crew.event.name}</td>
+                  <td>{crew.event_band}</td>
+                  <td>{this.getRank(crew, this.getCrewsInCategory(crew.event_band, this.getCrewsToDisplay()))}</td>
                   <td>{crew.penalty ? 'P' : ''}</td>
                 </tr>
               )}

@@ -2,13 +2,11 @@ import csv
 import os
 import requests
 from django.http import Http404, HttpResponse
-# from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-# from pprint import pprint
 
-from .serializers import CrewSerializer, PopulatedCrewSerializer, WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer, WriteCrewSerializer, WriteClubSerializer, ClubSerializer, EventSerializer, BandSerializer, CompetitorSerializer
+from .serializers import CrewSerializer, PopulatedCrewSerializer, WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer, WriteCrewSerializer, WriteClubSerializer, ClubSerializer, EventSerializer, BandSerializer, CompetitorSerializer, CrewExportSerializer
 
 from .models import Club, Event, Band, Crew, RaceTime, Competitor
 
@@ -241,7 +239,7 @@ class CrewDataImport(APIView):
 
     def get(self, _request):
         # Start by deleting all existing crews and times
-        # Crew.objects.all().delete()
+        Crew.objects.all().delete()
         # RaceTime.objects.all().delete()
 
         Meeting = os.getenv("MEETING2019") # Competition Meeting API from the Information --> API Key menu
@@ -270,7 +268,7 @@ class CrewDataImport(APIView):
                     'event': crew['eventId'],
                     'status': crew['status'],
                     'bib_number': crew['customCrewNumber'],
-                    'band_id': crew['bandId'],
+                    'band': crew['bandId'],
                 }
 
                 serializer = WriteCrewSerializer(data=data)
@@ -352,21 +350,68 @@ class CrewRaceTimesImport(APIView):
             return Response(serializer.data)
 
 
+# class CrewDataExport(APIView):
+#
+#     def get(self, _request):
+#
+#         crews = Crew.objects.all()
+#         response = HttpResponse(content_type='text/csv')
+#         response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
+#
+#         writer = csv.writer(response, delimiter=',')
+#         writer.writerow(['name', 'bib_number', 'id', 'status', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'club', 'event', 'band', 'competitors', 'penalty', 'handicap', 'raw_time',])
+#
+#         # (, 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds',  'band', ,)
+#
+#         for crew in crews:
+#             writer.writerow(
+#             [crew.name,
+#             crew.bib_number,
+#             crew.id,
+#             crew.status,
+#             crew.composite_code,
+#             crew.rowing_CRI,
+#             crew.rowing_CRI_max,
+#             crew.sculling_CRI,
+#             crew.sculling_CRI_max,
+#             crew.club.name,
+#             crew.event.name,
+#             crew.band,
+#             crew.competitor_names,
+#             crew.penalty,
+#             crew.handicap,
+#             crew.times, ])
+#
+#         return response
+#
+#         # serializer = PopulatedCrewSerializer(crews, many=True)
+#         # return Response(serializer.data)
+
 class CrewDataExport(APIView):
 
-    def get(self, _request):
 
-        crews = Crew.objects.all()
+    def get(self, _request):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
 
-        writer = csv.writer(response, delimiter=',')
-        writer.writerow(['name', 'bib_number', 'id', 'status', 'composite_code', 'club', 'event', 'competitors',  ])
+        crews = Crew.objects.all()
 
-        for crew in crews:
-            writer.writerow([crew.name, crew.bib_number, crew.id, crew.status, crew.composite_code, crew.club.name, crew.event.name, crew.competitor_names, ])
+        # for crew in crews:
+        #     data = {
+        #     'id': crew.id,
+        #     'name':  crew,
+        #     }
+
+        serializer = CrewExportSerializer(crews, many=True)
+
+        crews = serializer.data
+
+        header = CrewExportSerializer.Meta.fields
+
+        writer = csv.DictWriter(response, fieldnames=header)
+        writer.writeheader()
+
+        for row in serializer.data:
+            writer.writerow(row)
 
         return response
-
-        # serializer = PopulatedCrewSerializer(crews, many=True)
-        # return Response(serializer.data)

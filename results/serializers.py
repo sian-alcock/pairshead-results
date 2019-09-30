@@ -33,7 +33,7 @@ class CrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'penalty', 'handicap', 'bib_number',)
+        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'penalty', 'handicap', 'bib_number', 'time_only',)
 
 
 class PopulatedCrewSerializer(serializers.ModelSerializer):
@@ -51,17 +51,57 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
     start_sequence = serializers.IntegerField()
     finish_sequence = serializers.IntegerField()
     manual_override_time = serializers.IntegerField()
+    event_band = serializers.CharField(max_length=50)
+    # rank = serializers.IntegerField()
+    # rank = serializers.SerializerMethodField(method_name='calculate_rank')
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'event', 'club', 'band', 'competitors', 'competitor_names',)
+        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'event', 'club', 'band', 'competitors', 'competitor_names', 'event_band', 'time_only', )
+
+
+    # def calculate_rank(self, instance):
+    #     crews_list = Crew.objects.filter(race_time__gte=0)
+    #     race_times = list(map(lambda crew: crew.race_time, crews_list)).sort()
+    #     rank = race_times.index(instance.race_time) + 1
+    #     return rank
+
+class CrewExportSerializer(serializers.ModelSerializer):
+
+    club = ClubSerializer()
+    event = EventSerializer()
+    band = BandSerializer()
+    # competitors = CompetitorSerializer(many=True)
+    #
+    # times = RaceTimesSerializer(many=True)
+    raw_time = serializers.CharField()
+    race_time = serializers.IntegerField()
+    start_time = serializers.IntegerField()
+    finish_time = serializers.IntegerField()
+    start_sequence = serializers.IntegerField()
+    finish_sequence = serializers.IntegerField()
+    manual_override_time = serializers.IntegerField()
+
+    class Meta:
+        model = Crew
+        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'bib_number', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'manual_override_time', 'event', 'club', 'band', 'competitor_names', 'time_only',)
+
+    def validate_raw_time(self, value):
+
+        hundredths = (value / 10)%60
+        seconds = (value / 1000)%60
+        minutes = (value / (1000*60))%60
+
+        value = str(minutes)+':'+str(seconds)+'.'+str(hundredths)
+
+        return value
 
 
 class WriteCrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'club', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'event', 'status', 'band_id', 'bib_number')
+        fields = ('id', 'name', 'composite_code', 'club', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'event', 'status', 'band', 'bib_number')
 
 class WriteRaceTimesSerializer(serializers.ModelSerializer):
 

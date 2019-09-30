@@ -14,6 +14,7 @@ class CrewTimeEdit extends React.Component {
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleCheckbox = this.handleCheckbox.bind(this)
 
   }
 
@@ -36,10 +37,16 @@ class CrewTimeEdit extends React.Component {
     this.setState({ formData })
   }
 
+  handleCheckbox(e) {
+    const formData = { ...this.state.formData, [e.target.name]: e.target.checked }
+    this.setState({ formData })
+  }
+
 
   render() {
 
     console.log(this.state.formData)
+    console.log(this.state.formData.time_only)
 
     return (
       <section className="section">
@@ -132,6 +139,19 @@ class CrewTimeEdit extends React.Component {
               </div>
             </div>
 
+            <div className="field">
+              <label className="checkbox" htmlFor="time_only">
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  name="time_only"
+                  checked={this.state.formData.time_only}
+                  onChange={this.handleCheckbox}
+                /> Time only
+              </label>
+              {this.state.errors.time_only && <small className="help is-danger">{this.state.errors.time_only}</small>}
+
+            </div>
             <br />
             <button className="button is-primary">Submit</button>
           </form>
