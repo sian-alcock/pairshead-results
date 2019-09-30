@@ -78,7 +78,7 @@ class RaceTimeIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.raceTimes
     } else {
-      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.id) : re.test(time.sequence))
+      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.id) || re.test(time.crew.competitors_names) : re.test(time.sequence))
     }
 
     if(this.state.timesWithoutCrewBoolean) {
@@ -149,6 +149,7 @@ class RaceTimeIndex extends React.Component {
                 <th>Bib number</th>
                 <th>Crew ID</th>
                 <th>Crew name</th>
+                <th>Competitors</th>
               </tr>
             </thead>
             <tfoot>
@@ -159,6 +160,7 @@ class RaceTimeIndex extends React.Component {
                 <th>Bib number</th>
                 <th>Crew ID</th>
                 <th>Crew name</th>
+                <th>Competitors</th>
               </tr>
             </tfoot>
             <tbody>
@@ -170,6 +172,7 @@ class RaceTimeIndex extends React.Component {
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.bib_number}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.id}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.name}</td>
+                  <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.competitor_names}</td>
 
                 </tr>
               )}

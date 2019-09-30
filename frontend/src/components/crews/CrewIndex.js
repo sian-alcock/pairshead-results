@@ -80,7 +80,6 @@ class CrewIndex extends React.Component {
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
-
   handleCrewsWithoutFinishTime(e){
     this.setState({
       crewsWithoutFinishTimeBoolean: e.target.checked
@@ -105,7 +104,7 @@ class CrewIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.crews
     } else {
-      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.status) || re.test(crew.club) || re.test(crew.id))
+      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.status) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitors_names) || re.test(!crew.band ? '' : crew.band.name) || re.test(!crew.event ? '' : crew.event.name))
     }
 
     if(this.state.crewsWithoutStartTimeBoolean) {
@@ -121,7 +120,7 @@ class CrewIndex extends React.Component {
     }
 
     if(this.state.scratchedCrewsBoolean) {
-      filteredByScratchedCrews = this.state.crews.filter(crew => crew !== 'Scratched')
+      filteredByScratchedCrews = this.state.crews.filter(crew => crew.status !== 'Scratched')
     } else {
       filteredByScratchedCrews = this.state.crews
     }

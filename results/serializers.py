@@ -119,7 +119,7 @@ class WriteRaceTimesSerializer(serializers.ModelSerializer):
 
 class PopulatedRaceTimesSerializer(serializers.ModelSerializer):
 
-    crew = CrewSerializer()
+    crew = PopulatedCrewSerializer()
 
     class Meta:
         model = RaceTime
