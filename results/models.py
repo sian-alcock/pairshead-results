@@ -1,4 +1,5 @@
 from django.db import models
+# import computed_property
 
 class Club(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -43,7 +44,8 @@ class Crew(models.Model):
     bib_number = models.IntegerField(blank=True, null=True)
     band = models.ForeignKey(Band, related_name='bands',
     on_delete=models.CASCADE, blank=True, null=True)
-    raw_time = models.IntegerField(default=0)
+    # raw_time = computed_property.ComputedIntegerField(compute_from='calculate_raw_time')
+    # race_time = computed_property.ComputedIntegerField(compute_from='calculate_race_time')
     time_only = models.BooleanField(default=False)
 
     def __str__(self):
@@ -58,15 +60,18 @@ class Crew(models.Model):
         value = ' / '.join(competitor_list)
         return value
 
-    @property
-    def rank(self):
-        # crews = Crew.objects.filter(status__in='Accepted').filter(race_time__isnull=False)
-        crews = Crew.objects.all()
-        filtered_crews = list(filter(lambda crew: crew.status == 'Accepted' and crew.race_time is not None, crews))
-        race_times = list(map(lambda crew: crew.race_time, filtered_crews)).sort()
-        rank = race_times.index(self.race_time) + 1
-        return rank
+    # @property
+    # def rank(self):
+    #     # crews = Crew.objects.filter(status__in='Accepted').filter(race_time__gt=0).filter(race_time__lt=self.race_time)
+    #     # filtered_crews = list(filter(lambda crew: crew.status == 'Accepted' and crew.race_time is not None, crews))
+    #     # race_times = list(map(lambda crew: crew.race_time, crews)).sort()
+    #     # rank = race_times.index(self.race_time) + 1
+    #     return rank
 
+    # @property
+    # def rank(self):
+    #     rank = Crew.objects.filter(status__in='Accepted').filter(race_time__gt=0).filter(race_time__lt=self.race_time).count() + 1
+    #     return rank
 
     @property
     def event_band(self):
@@ -75,24 +80,14 @@ class Crew(models.Model):
 
         return str(self.event.name) + ' ' + str(self.band.name)
 
-
-    def calculate_raw_time(self):
+    @property
+    def raw_time(self):
         if len(self.times.filter(tap='Start')) > 1 or len(self.times.filter(tap='Finish')) > 1:
             return 0
 
         start = self.times.get(tap='Start').time_tap
         end = self.times.get(tap='Finish').time_tap
         return end - start
-
-
-    # @property
-    # def raw_time(self):
-    #     if len(self.times.filter(tap='Start')) > 1 or len(self.times.filter(tap='Finish')) > 1:
-    #         return 0
-    #
-    #     start = self.times.get(tap='Start').time_tap
-    #     end = self.times.get(tap='Finish').time_tap
-    #     return end - start
 
     @property
     def race_time(self):

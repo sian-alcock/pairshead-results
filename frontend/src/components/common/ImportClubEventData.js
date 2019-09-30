@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { formatTimeDate } from '../../lib/helpers'
 
-class CrewLoader extends Component {
+class ClubEventLoader extends Component {
   constructor() {
     super()
 
@@ -21,8 +21,14 @@ class CrewLoader extends Component {
 
     try {
 
-      const crews = await axios.get('/api/crew-data-import/')
-      console.log(crews.data)
+      const clubsPromise = axios.get('/api/club-data-import/')
+      const eventsPromise = axios.get('/api/event-data-import/')
+      const [clubs, events] = await Promise.all([clubsPromise, eventsPromise])
+      console.log(clubs.data, events.data)
+
+      // wait for first two calls before running the crew import
+      const bands = await axios.get('/api/band-data-import/')
+      console.log(bands.data)
 
       this.setState({ crewDataUpdated: Date.now(), loading: false })
 
@@ -41,7 +47,7 @@ class CrewLoader extends Component {
           {loading && <span className="spinner"><i
             className="fas fa-spinner fa-spin"
           /> Loading ...</span>}
-          {!loading && <span>Get Crew data</span>}
+          {!loading && <span>Get clubs and events</span>}
 
         </button>
         <p><small>{!this.state.crewDataUpdated ? '' : `Updated: ${formatTimeDate(this.state.crewDataUpdated)}`}</small></p>
@@ -50,4 +56,4 @@ class CrewLoader extends Component {
   }
 }
 
-export default CrewLoader
+export default ClubEventLoader

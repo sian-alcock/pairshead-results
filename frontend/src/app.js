@@ -11,6 +11,7 @@ import CrewTimeEdit from './components/crews/CrewTimeEdit'
 import RaceTimeIndex from './components/crews/RaceTimeIndex'
 import RaceTimeEdit from './components/crews/RaceTimeEdit'
 import ResultIndex from './components/crews/ResultIndex'
+import ImportData from './components/crews/ImportData'
 import Navbar from './components/common/Navbar'
 import Footer from './components/common/Footer'
 import Header from './components/common/Header'
@@ -37,6 +38,7 @@ class App extends React.Component {
             <Route path="/race-times/:id" component={RaceTimeEdit} />
             <Route path="/race-times" component={RaceTimeIndex} />
             <Route path="/results" component={ResultIndex} />
+            <Route path="/import" component={ImportData} />
             <Route path="/" component={Home} />
           </Switch>
           <Footer />

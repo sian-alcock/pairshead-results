@@ -1,9 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import CrewLoader from '../common/ImportCrewData'
-import TimeLoader from '../common/ImportTimeData'
-// import DownLoader from '../common/Downloader'
 
 class Home extends React.Component {
   constructor() {
@@ -63,12 +60,16 @@ class Home extends React.Component {
       <section className="section">
         <div className="container">
           <div className="columns is-centered">
-            <div className="column has-text-centered">
-              <CrewLoader/>
-            </div>
 
             <div className="column has-text-centered">
-              <TimeLoader/>
+              <Link
+                to={{
+                  pathname: '/import'
+                }}>
+                <button className="button is-primary">
+                  Import data
+                </button>
+              </Link>
             </div>
 
             <div className="column has-text-centered">

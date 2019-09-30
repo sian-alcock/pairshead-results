@@ -52,19 +52,10 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
     finish_sequence = serializers.IntegerField()
     manual_override_time = serializers.IntegerField()
     event_band = serializers.CharField(max_length=50)
-    # rank = serializers.IntegerField()
-    # rank = serializers.SerializerMethodField(method_name='calculate_rank')
 
     class Meta:
         model = Crew
         fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'bib_number', 'times', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'event', 'club', 'band', 'competitors', 'competitor_names', 'event_band', 'time_only', )
-
-
-    # def calculate_rank(self, instance):
-    #     crews_list = Crew.objects.filter(race_time__gte=0)
-    #     race_times = list(map(lambda crew: crew.race_time, crews_list)).sort()
-    #     rank = race_times.index(instance.race_time) + 1
-    #     return rank
 
 class CrewExportSerializer(serializers.ModelSerializer):
 

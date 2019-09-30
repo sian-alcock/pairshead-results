@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { formatTimeDate } from '../../lib/helpers'
 
-class CrewLoader extends Component {
+class CompetitorLoader extends Component {
   constructor() {
     super()
 
     this.state = {
       loading: false,
-      crewDataUpdated: ''
+      competitorDataUpdated: ''
     }
 
     this.getData = this.getData.bind(this)
@@ -21,10 +21,10 @@ class CrewLoader extends Component {
 
     try {
 
-      const crews = await axios.get('/api/crew-data-import/')
-      console.log(crews.data)
+      const competitors = await axios.get('/api/competitor-data-import/')
+      console.log(competitors.data)
 
-      this.setState({ crewDataUpdated: Date.now(), loading: false })
+      this.setState({ competitorDataUpdated: Date.now(), loading: false })
 
     } catch (e) {
       console.error(e)
@@ -41,13 +41,13 @@ class CrewLoader extends Component {
           {loading && <span className="spinner"><i
             className="fas fa-spinner fa-spin"
           /> Loading ...</span>}
-          {!loading && <span>Get Crew data</span>}
+          {!loading && <span>Get Competitor data</span>}
 
         </button>
-        <p><small>{!this.state.crewDataUpdated ? '' : `Updated: ${formatTimeDate(this.state.crewDataUpdated)}`}</small></p>
+        <p><small>{!this.state.competitorDataUpdated ? '' : `Updated: ${formatTimeDate(this.state.competitorDataUpdated)}`}</small></p>
       </div>
     )
   }
 }
 
-export default CrewLoader
+export default CompetitorLoader

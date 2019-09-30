@@ -215,6 +215,7 @@ class CrewIndex extends React.Component {
                 <td>Crew</td>
                 <td>Competitors</td>
                 <td>Status</td>
+                <td>Blade</td>
                 <td>Boat number</td>
                 <td>Club</td>
                 <td>Event</td>
@@ -236,6 +237,7 @@ class CrewIndex extends React.Component {
                 <td>Crew</td>
                 <td>Competitors</td>
                 <td>Status</td>
+                <td>Blade</td>
                 <td>Boat number</td>
                 <td>Club</td>
                 <td>Event</td>
@@ -258,6 +260,7 @@ class CrewIndex extends React.Component {
                   <td>{crew.name}</td>
                   <td>{!crew.competitor_names ? '' : crew.competitor_names}</td>
                   <td>{crew.status}</td>
+                  <td>{<img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" />}</td>
                   <td>{!crew.bib_number ? '' : crew.bib_number}</td>
                   <td>{crew.club.index_code}</td>
                   <td>{crew.event.name}</td>

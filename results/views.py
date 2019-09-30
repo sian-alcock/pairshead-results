@@ -240,7 +240,7 @@ class CrewDataImport(APIView):
     def get(self, _request):
         # Start by deleting all existing crews and times
         Crew.objects.all().delete()
-        # RaceTime.objects.all().delete()
+        RaceTime.objects.all().delete()
 
         Meeting = os.getenv("MEETING2019") # Competition Meeting API from the Information --> API Key menu
         UserAPI = os.getenv("USERAPI") # As supplied in email
