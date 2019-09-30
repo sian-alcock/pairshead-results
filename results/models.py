@@ -37,7 +37,8 @@ class Crew(models.Model):
     on_delete=models.CASCADE)
     status = models.CharField(max_length=20)
     penalty = models.IntegerField(default=0)
-    handicap = models.IntegerField(default=0)
+    masters_adjust_minutes = models.IntegerField(default=0)
+    masters_adjust_seconds = models.IntegerField(default=0)
     manual_override_minutes = models.IntegerField(default=0)
     manual_override_seconds = models.IntegerField(default=0)
     manual_override_hundredths_seconds = models.IntegerField(default=0)
@@ -128,6 +129,24 @@ class Crew(models.Model):
     def manual_override_time(self):
         time = (self.manual_override_minutes*60*1000) + (self.manual_override_seconds*1000) + (self.manual_override_hundredths_seconds*10)
         return time
+
+# Turn the masters adjust minutes/seconds into miliseconds
+    @property
+    def masters_adjustment(self):
+        if self.masters_adjust_minutes == 0 and self.masters_adjust_seconds == 0:
+            return 0
+
+        time = (self.masters_adjust_minutes*60*1000) + (self.masters_adjust_seconds*1000)
+        return time
+
+# Turn the masters adjust minutes/seconds into miliseconds
+    @property
+    def masters_adjusted_time(self):
+        if self.masters_adjustment == 0:
+            return 0
+
+        adjusted_time = self.race_time - self.masters_adjustment
+        return adjusted_time
 
 class Competitor(models.Model):
     last_name = models.CharField(max_length=50)

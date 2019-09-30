@@ -76,26 +76,32 @@ class ResultIndex extends React.Component {
           <table className="table">
             <thead>
               <tr>
-                <td>Overall</td>
+                <td>Overall position</td>
                 <td>Crew ID</td>
+                <td>Time</td>
+                <td>Masters adjust</td>
                 <td colSpan='2'>Rowing club</td>
                 <td>Crew</td>
-                <td>Time</td>
+                <td>Composite code</td>
                 <td>Event</td>
                 <td>Pos in category</td>
                 <td>Penalty</td>
+                <td>TO</td>
               </tr>
             </thead>
             <tfoot>
               <tr>
-                <td>Overall</td>
+                <td>Overall position</td>
                 <td>Crew ID</td>
+                <td>Time</td>
+                <td>Masters adjust</td>
                 <td colSpan='2'>Rowing club</td>
                 <td>Crew</td>
-                <td>Time</td>
+                <td>Composite code</td>
                 <td>Event</td>
                 <td>Pos in category</td>
                 <td>Penalty</td>
+                <td>TO</td>
               </tr>
             </tfoot>
             <tbody>
@@ -103,13 +109,16 @@ class ResultIndex extends React.Component {
                 <tr key={crew.id}>
                   <td>{this.getRank(crew, this.getCrewsToDisplay())}</td>
                   <td>{crew.id}</td>
+                  <td>{formatTimes(crew.race_time)}</td>
+                  <td>{!crew.masters_adjusted_time ? '' : formatTimes(crew.masters_adjusted_time)}</td>
                   <td><img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" /></td>
                   <td>{crew.club.name}</td>
-                  <td>{crew.name}</td>
-                  <td>{formatTimes(crew.race_time)}</td>
+                  <td>{crew.competitor_names}</td>
+                  <td>{crew.composite_code}</td>
                   <td>{crew.event_band}</td>
                   <td>{this.getRank(crew, this.getCrewsInCategory(crew.event_band, this.getCrewsToDisplay()))}</td>
                   <td>{crew.penalty ? 'P' : ''}</td>
+                  <td>{crew.time_only ? 'TO' : ''}</td>
                 </tr>
               )}
             </tbody>

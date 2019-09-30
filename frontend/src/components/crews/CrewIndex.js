@@ -212,67 +212,67 @@ class CrewIndex extends React.Component {
               <tr>
                 <td>Crew ID</td>
                 <td>Crew</td>
-                <td>Competitors</td>
                 <td>Status</td>
                 <td>Blade</td>
-                <td>Boat number</td>
+                <td>Bib</td>
                 <td>Club</td>
-                <td>Event</td>
-                <td>Band</td>
+                <td>Category</td>
                 <td>Start seq#</td>
                 <td>Finish seq#</td>
                 <td><abbr title="Penalty">P</abbr></td>
-                <td><abbr title="Handicap">H</abbr></td>
                 <td>Start time</td>
                 <td>Finish time</td>
                 <td>Raw time</td>
                 <td>Race time</td>
+                <td>Mas adjust</td>
+                <td>Mas adjusted</td>
                 <td>Time override</td>
+                <td>TO</td>
               </tr>
             </thead>
             <tfoot>
               <tr>
                 <td>Crew ID</td>
                 <td>Crew</td>
-                <td>Competitors</td>
                 <td>Status</td>
                 <td>Blade</td>
-                <td>Boat number</td>
+                <td>Bib</td>
                 <td>Club</td>
-                <td>Event</td>
-                <td>Band</td>
+                <td>Category</td>
                 <td>Start seq#</td>
                 <td>Finish seq#</td>
                 <td><abbr title="Penalty">P</abbr></td>
-                <td><abbr title="Handicap">H</abbr></td>
                 <td>Start time</td>
                 <td>Finish time</td>
                 <td>Raw time</td>
                 <td>Race time</td>
+                <td>Mas adjustment</td>
+                <td>Mas adjust</td>
                 <td>Time override</td>
+                <td>TO</td>
               </tr>
             </tfoot>
             <tbody>
               {pagedCrews.map(crew =>
                 <tr key={crew.id}>
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
-                  <td>{crew.name}</td>
-                  <td>{!crew.competitor_names ? '' : crew.competitor_names}</td>
+                  <td>{!crew.competitor_names ? crew.name : crew.competitor_names}</td>
                   <td>{crew.status}</td>
                   <td>{<img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" />}</td>
                   <td>{!crew.bib_number ? '' : crew.bib_number}</td>
                   <td>{crew.club.index_code}</td>
-                  <td>{crew.event.name}</td>
-                  <td>{!crew.band ? '' : crew.band.name}</td>
+                  <td>{crew.event_band}</td>
                   <td>{crew.start_sequence ? crew.start_sequence : '⚠️'}</td>
                   <td>{crew.finish_sequence ? crew.finish_sequence : '⚠️'}</td>
                   <td>{crew.penalty}</td>
-                  <td>{crew.handicap}</td>
                   <td>{crew.start_time ? formatTimes(crew.start_time) : '⚠️'}</td>
                   <td>{crew.finish_time ? formatTimes(crew.finish_time) : '⚠️'}</td>
                   <td>{crew.raw_time ? formatTimes(crew.raw_time) : '⚠️'}</td>
                   <td>{crew.race_time ? formatTimes(crew.race_time) : '⚠️'}</td>
+                  <td>{crew.masters_adjustment === 0 ? '' : formatTimes(crew.masters_adjustment)}</td>
+                  <td>{crew.masters_adjusted_time === 0 ? '' : formatTimes(crew.masters_adjusted_time)}</td>
                   <td>{crew.manual_override_time ? formatTimes(crew.manual_override_time) : ''}</td>
+                  <td>{crew.time_only ? 'TO' : ''}</td>
                 </tr>
               )}
             </tbody>

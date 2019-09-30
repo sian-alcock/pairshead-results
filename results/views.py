@@ -73,6 +73,7 @@ class RaceTimeDetailView(APIView):
         race_time.delete()
         return Response(status=204)
 
+
 class CrewListView(APIView): # extend the APIView
 
     def get(self, _request):
