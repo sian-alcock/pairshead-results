@@ -14,7 +14,7 @@ class CrewIndex extends React.Component {
     this.state = {
       crews: [],
       crewsToDisplay: [],
-      pageSize: 20,
+      pageSize: 500,
       pageIndex: 0,
       searchTerm: '',
       sortTerm: 'finish_sequence|asc',
@@ -170,6 +170,8 @@ class CrewIndex extends React.Component {
                     <option value="club.index_code|desc">Club, desc</option>
                     <option value="event.name|asc">Event, asc</option>
                     <option value="event.name|desc">Event, desc</option>
+                    <option value="bib_number|asc">Bib, asc</option>
+                    <option value="bib_number|desc">Bib, desc</option>
                   </select>
                 </div>
               </div>
