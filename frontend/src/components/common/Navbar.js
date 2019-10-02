@@ -55,7 +55,10 @@ class Navbar extends React.Component {
                 <Link to="/race-times" className="navbar-item">Race times</Link>
                 <Link to="/results" className="navbar-item">Results</Link>
                 <Link to="/import" className="navbar-item">Import data</Link>
+              </div>
+              <div className="navbar-end">
                 <Link to="/crew-draw-report" className="navbar-item">Draw</Link>
+                <Link to="/info" className="navbar-item">Info</Link>
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 // import { ToastContainer } from 'react-toastify'
 
 import Home from './components/pages/Home'
+import Info from './components/pages/Info'
 import CrewIndex from './components/crews/CrewIndex'
 import CrewTimeEdit from './components/crews/CrewTimeEdit'
 import RaceTimeIndex from './components/crews/RaceTimeIndex'
@@ -41,6 +42,7 @@ class App extends React.Component {
             <Route path="/results" component={ResultIndex} />
             <Route path="/import" component={ImportData} />
             <Route path="/crew-draw-report" component={CrewDrawReport} />
+            <Route path="/info" component={Info} />
             <Route path="/" component={Home} />
           </Switch>
           <Footer />

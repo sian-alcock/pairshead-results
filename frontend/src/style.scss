@@ -27,6 +27,14 @@ table {
   margin: 0 auto;
 }
 
+@media print
+{
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
 .container {
   text-align: center;
   align-content: center;

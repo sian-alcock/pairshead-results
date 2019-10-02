@@ -96,6 +96,20 @@ class Crew(models.Model):
         return self.raw_time + self.penalty*1000
 
     @property
+    def published_time(self):
+        # If overall time has been overriden - use the override time + penalty otherwise use race_time
+        if self.manual_override_time > 0:
+            return self.manual_override_time + self.penalty*1000
+        return self.race_time
+
+    @property
+    def category_position_time(self):
+        # This property created purely for use when calculating position in category ranking.  It uses the published time or masters adjusted time if one exists
+        if self.masters_adjusted_time > 0:
+            return self.masters_adjusted_time + self.penalty*1000
+        return self.published_time
+
+    @property
     def start_time(self):
         if len(self.times.filter(tap='Start')) > 1:
             return 0
