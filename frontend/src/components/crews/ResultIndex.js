@@ -23,6 +23,7 @@ class ResultIndex extends React.Component {
     this.combineFiltersAndSort = this.combineFiltersAndSort.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
+    this.handleCloseFirstAndSecondCrews = this.handleCloseFirstAndSecondCrews.bind(this)
 
   }
 
@@ -91,9 +92,17 @@ class ResultIndex extends React.Component {
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
+  handleCloseFirstAndSecondCrews(e){
+    this.setState({
+      closeFirstAndSecondCrewsBoolean: e.target.checked
+    }, () => this.combineFiltersAndSort(this.state.crews))
+  }
+
   combineFiltersAndSort(filteredCrews) {
     let filteredBySearchText
     let filteredByCategory
+    let filteredByCloseFirstAndSecondCrews
+    let sortedCrews
 
 
     // Only ever include crews with a published time
@@ -114,10 +123,21 @@ class ResultIndex extends React.Component {
       filteredByCategory = this.state.crews
     }
 
-    _.indexOf = _.findIndex
-    filteredCrews = _.intersection(filteredByValidRaceTime,  filteredBySearchText, filteredByCategory)
+    if(this.state.closeFirstAndSecondCrewsBoolean) {
+      filteredByCloseFirstAndSecondCrews = this.state.crews.filter(crew => this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay)) === 1 || this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay)) === 2)
+    } else {
+      filteredByCloseFirstAndSecondCrews = this.state.crews
+    }
 
-    const sortedCrews = filteredCrews.sort((a, b) => (a.published_time > b.published_time) ? 1 : -1)
+    _.indexOf = _.findIndex
+    filteredCrews = _.intersection(filteredByValidRaceTime,  filteredBySearchText, filteredByCategory, filteredByCloseFirstAndSecondCrews)
+
+    // As a rule, sort by shortest race_time but when showing 1st and second crews, sort by event
+    if(this.state.closeFirstAndSecondCrewsBoolean) {
+      sortedCrews = filteredCrews.sort((a, b) => (a.event_band > b.event_band) ? 1 : -1)
+    } else {
+      sortedCrews = filteredCrews.sort((a, b) => (a.published_time > b.published_time) ? 1 : -1)
+    }
     return this.setState({ crewsToDisplay: sortedCrews, pageIndex: 0 })
 
   }
@@ -153,6 +173,15 @@ class ResultIndex extends React.Component {
                     options={this.getCategories()}
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="column">
+              <div className="field">
+                <label className="checkbox" >
+                  <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleCloseFirstAndSecondCrews} />
+                  Crews in 1st and 2nd place
+                </label>
               </div>
             </div>
 

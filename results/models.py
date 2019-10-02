@@ -63,10 +63,10 @@ class Crew(models.Model):
 
     # @property
     # def rank(self):
-    #     # crews = Crew.objects.filter(status__in='Accepted').filter(race_time__gt=0).filter(race_time__lt=self.race_time)
-    #     # filtered_crews = list(filter(lambda crew: crew.status == 'Accepted' and crew.race_time is not None, crews))
-    #     # race_times = list(map(lambda crew: crew.race_time, crews)).sort()
-    #     # rank = race_times.index(self.race_time) + 1
+    #     crews = Crew.objects.filter(status__in='Accepted').filter(race_time__gt=0).filter(race_time__lt=self.race_time)
+    #     filtered_crews = list(filter(lambda crew: crew.status == 'Accepted' and crew.race_time is not None, crews))
+    #     race_times = list(map(lambda crew: crew.race_time, crews)).sort()
+    #     rank = race_times.index(self.race_time) + 1
     #     return rank
 
     # @property
@@ -77,9 +77,9 @@ class Crew(models.Model):
     @property
     def event_band(self):
         if not self.band:
-            return self.event.name
+            return self.event.override_name
 
-        return str(self.event.name) + ' ' + str(self.band.name)
+        return str(self.event.override_name) + ' ' + str(self.band.name)
 
     @property
     def raw_time(self):
