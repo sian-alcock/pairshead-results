@@ -24,16 +24,18 @@ class CrewIndex extends React.Component {
     }
 
 
+    this.changePage = this.changePage.bind(this)
+    this.getNumCrewsWithoutFinishTimes = this.getNumCrewsWithoutFinishTimes.bind(this)
+    this.getNumCrewsWithoutStartTimes = this.getNumCrewsWithoutStartTimes.bind(this)
+    this.getNumScratchedCrews = this.getNumScratchedCrews.bind(this)
+    this.getNumCrewsWithTooManyTimes = this.getNumCrewsWithTooManyTimes.bind(this)
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
     this.handleSortChange = this.handleSortChange.bind(this)
-    this.combineFiltersAndSort = this.combineFiltersAndSort.bind(this)
     this.handleCrewsWithoutStartTime = this.handleCrewsWithoutStartTime.bind(this)
     this.handleCrewsWithoutFinishTime = this.handleCrewsWithoutFinishTime.bind(this)
-    this.getNumCrewsWithoutStartTimes = this.getNumCrewsWithoutStartTimes.bind(this)
-    this.getNumCrewsWithoutFinishTimes = this.getNumCrewsWithoutFinishTimes.bind(this)
+    this.handleCrewsWithTooManyTimes = this.handleCrewsWithTooManyTimes.bind(this)
     this.handleScratchedCrews = this.handleScratchedCrews.bind(this)
-    this.getNumScratchedCrews = this.getNumScratchedCrews.bind(this)
-    this.changePage = this.changePage.bind(this)
+    this.combineFiltersAndSort = this.combineFiltersAndSort.bind(this)
   }
 
   componentDidMount() {
@@ -58,6 +60,10 @@ class CrewIndex extends React.Component {
 
   getNumCrewsWithoutFinishTimes(){
     return this.state.crews.filter(crew => crew.status === 'Accepted' && !crew.finish_time).length
+  }
+
+  getNumCrewsWithTooManyTimes(){
+    return this.state.crews.filter(crew => crew.times && crew.times.length > 2).length
   }
 
   getNumScratchedCrews(){
@@ -86,6 +92,12 @@ class CrewIndex extends React.Component {
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
+  handleCrewsWithTooManyTimes(e){
+    this.setState({
+      crewsWithTooManyTimesBoolean: e.target.checked
+    }, () => this.combineFiltersAndSort(this.state.crews))
+  }
+
   handleScratchedCrews(e){
     this.setState({
       scratchedCrewsBoolean: e.target.checked
@@ -96,6 +108,7 @@ class CrewIndex extends React.Component {
     let filteredBySearchText
     let filteredByCrewsWithoutStartTime
     let filteredByCrewsWithoutFinishTime
+    let filteredByCrewsWithTooManyTimes
     let filteredByScratchedCrews
 
     // Create filter based on Regular expression of the search term
@@ -119,6 +132,12 @@ class CrewIndex extends React.Component {
       filteredByCrewsWithoutFinishTime = this.state.crews
     }
 
+    if(this.state.crewsWithTooManyTimesBoolean) {
+      filteredByCrewsWithTooManyTimes = this.state.crews.filter(crew => crew.times && crew.times.length > 2)
+    } else {
+      filteredByCrewsWithTooManyTimes = this.state.crews
+    }
+
     if(this.state.scratchedCrewsBoolean) {
       filteredByScratchedCrews = this.state.crews.filter(crew => crew.status !== 'Scratched')
     } else {
@@ -126,7 +145,7 @@ class CrewIndex extends React.Component {
     }
 
     _.indexOf = _.findIndex
-    filteredCrews = _.intersection(this.state.crews,  filteredBySearchText, filteredByCrewsWithoutStartTime, filteredByCrewsWithoutFinishTime, filteredByScratchedCrews)
+    filteredCrews = _.intersection(this.state.crews,  filteredBySearchText, filteredByCrewsWithoutStartTime, filteredByCrewsWithoutFinishTime, filteredByCrewsWithTooManyTimes, filteredByScratchedCrews)
 
     const [field, order] = this.state.sortTerm.split('|')
     const sortedCrews = _.orderBy(filteredCrews, [field], [order])
@@ -189,6 +208,14 @@ class CrewIndex extends React.Component {
                 <label className="checkbox" >
                   <input type="checkbox"  className="checkbox" value="crewsWithoutFinishTime" onClick={this.handleCrewsWithoutFinishTime} />
                   {`⚠️ Crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}
+                </label>
+              </div>
+
+
+              <div className="field">
+                <label className="checkbox" >
+                  <input type="checkbox"  className="checkbox" value="crewsWithMultipleTimes" onClick={this.handleCrewsWithTooManyTimes} />
+                  {`❗️ Crews with multiple times (${this.getNumCrewsWithTooManyTimes()})`}
                 </label>
               </div>
             </div>
@@ -258,7 +285,7 @@ class CrewIndex extends React.Component {
               {pagedCrews.map(crew =>
                 <tr key={crew.id}>
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
-                  <td>{!crew.competitor_names ? crew.name : crew.competitor_names}</td>
+                  <td>{!crew.competitor_names ? crew.name : crew.times.length && crew.times.length > 2 ? crew.competitor_names + '❗️' : crew.competitor_names}</td>
                   <td>{crew.status}</td>
                   <td>{<img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" />}</td>
                   <td>{!crew.bib_number ? '' : crew.bib_number}</td>
