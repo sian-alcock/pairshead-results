@@ -40,6 +40,19 @@ table {
   align-content: center;
 }
 
+.column.left, div.list-totals {
+  text-align: left;
+}
+
+div.list-totals {
+  margin-bottom: 2px;
+  padding-left: 9px;
+}
+
+hr {
+  margin: 12px 0 12px 0;
+}
+
 .tabContainer {
   margin: 0 auto;
   width: 400px;

@@ -388,6 +388,7 @@ class CrewRaceTimesImport(APIView):
 #         # serializer = PopulatedCrewSerializer(crews, many=True)
 #         # return Response(serializer.data)
 
+
 class CrewDataExport(APIView):
 
 
@@ -396,12 +397,6 @@ class CrewDataExport(APIView):
         response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
 
         crews = Crew.objects.all()
-
-        # for crew in crews:
-        #     data = {
-        #     'id': crew.id,
-        #     'name':  crew,
-        #     }
 
         serializer = CrewExportSerializer(crews, many=True)
 

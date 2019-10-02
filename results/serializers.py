@@ -59,23 +59,23 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
 
 class CrewExportSerializer(serializers.ModelSerializer):
 
-    club = ClubSerializer()
-    event = EventSerializer()
-    band = BandSerializer()
+    # club = ClubSerializer()
+    # event = EventSerializer()
+    # band = BandSerializer()
     # competitors = CompetitorSerializer(many=True)
     #
     # times = RaceTimesSerializer(many=True)
     raw_time = serializers.CharField()
-    race_time = serializers.IntegerField()
-    start_time = serializers.IntegerField()
-    finish_time = serializers.IntegerField()
-    start_sequence = serializers.IntegerField()
-    finish_sequence = serializers.IntegerField()
-    manual_override_time = serializers.IntegerField()
+    # race_time = serializers.IntegerField()
+    # start_time = serializers.IntegerField()
+    # finish_time = serializers.IntegerField()
+    # start_sequence = serializers.IntegerField()
+    # finish_sequence = serializers.IntegerField()
+    # manual_override_time = serializers.IntegerField()
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'rowing_CRI', 'rowing_CRI_max', 'sculling_CRI', 'sculling_CRI_max', 'status', 'penalty', 'handicap', 'bib_number', 'raw_time', 'race_time', 'start_time', 'finish_time', 'start_sequence', 'finish_sequence', 'manual_override_time', 'event', 'club', 'band', 'competitor_names', 'time_only',)
+        fields = ('id', 'bib_number', 'raw_time',)
 
     def validate_raw_time(self, value):
 

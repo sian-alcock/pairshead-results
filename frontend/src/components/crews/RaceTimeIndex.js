@@ -128,7 +128,7 @@ class RaceTimeIndex extends React.Component {
     return (
       <section className="section">
         <div className="container">
-          <div className="tabContainer">
+          <div className="tabContainer no-print">
             <div className="tabs is-toggle is-large is-centered">
               <ul>
                 <li onClick={this.displayStartTimes}><a className={`startTab ${this.state.startTab ? 'active' : ''}`}>Start times</a></li>
@@ -137,7 +137,7 @@ class RaceTimeIndex extends React.Component {
             </div>
           </div>
 
-          <div className="search field control has-icons-left">
+          <div className="search field control has-icons-left no-print">
             <span className="icon is-left">
               <i className="fas fa-search"></i>
             </span>
@@ -145,14 +145,14 @@ class RaceTimeIndex extends React.Component {
 
           </div>
 
-          <div className="field">
+          <div className="field no-print">
             <label className="checkbox" >
               <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleTimesWithoutCrew} />
               {`⚠️ Times with no crew (${this.getNumTimesWithNoCrew()})`}
             </label>
           </div>
 
-          <div className="field">
+          <div className="field no-print">
             <label className="checkbox" >
               <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleCrewsWithTooManyTimes} />
               {`❗️ Crews with too many times (${this.getNumCrewsWithTooManyTimes()})`}

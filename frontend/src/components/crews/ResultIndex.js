@@ -15,7 +15,8 @@ class ResultIndex extends React.Component {
       pageSize: 20,
       pageIndex: 0,
       crewsInCategory: [],
-      crewsToDisplay: []
+      crewsToDisplay: [],
+      filteredByValidRaceTime: []
     }
 
     this.changePage = this.changePage.bind(this)
@@ -29,7 +30,7 @@ class ResultIndex extends React.Component {
 
   componentDidMount() {
     axios.get('/api/crews/')
-      .then(res => this.setState({ crews: res.data },
+      .then(res => this.setState({ crews: res.data, filteredByValidRaceTime: res.data.filter(crew => crew.status === 'Accepted' && crew.published_time > 0) },
         () => this.combineFiltersAndSort(this.state.crews))
       )
   }
@@ -106,7 +107,7 @@ class ResultIndex extends React.Component {
 
 
     // Only ever include crews with a published time
-    const filteredByValidRaceTime = this.state.crews.filter(crew => crew.published_time > 0)
+    // const filteredByValidRaceTime = this.state.crews.filter(crew => crew.status === 'Accepted' && crew.published_time > 0)
 
     // Create filter based on Regular expression of the search term
     const re= new RegExp(this.state.searchTerm, 'i')
@@ -130,7 +131,7 @@ class ResultIndex extends React.Component {
     }
 
     _.indexOf = _.findIndex
-    filteredCrews = _.intersection(filteredByValidRaceTime,  filteredBySearchText, filteredByCategory, filteredByCloseFirstAndSecondCrews)
+    filteredCrews = _.intersection(this.state.filteredByValidRaceTime,  filteredBySearchText, filteredByCategory, filteredByCloseFirstAndSecondCrews)
 
     // As a rule, sort by shortest race_time but when showing 1st and second crews, sort by event
     if(this.state.closeFirstAndSecondCrewsBoolean) {
@@ -193,7 +194,7 @@ class ResultIndex extends React.Component {
             changePage={this.changePage}
           />
 
-
+          <div className="list-totals"><small>{this.state.crewsToDisplay.length} of {this.state.filteredByValidRaceTime.length} results</small></div>
           <table className="table">
             <thead>
               <tr>
