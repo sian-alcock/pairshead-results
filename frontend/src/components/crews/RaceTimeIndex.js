@@ -26,6 +26,7 @@ class RaceTimeIndex extends React.Component {
     this.handleTimesWithoutCrew = this.handleTimesWithoutCrew.bind(this)
     this.combineFilters = this.combineFilters.bind(this)
     this.changePage = this.changePage.bind(this)
+    this.handleCrewsWithTooManyTimes = this.handleCrewsWithTooManyTimes.bind(this)
   }
 
   componentDidMount() {
@@ -54,6 +55,10 @@ class RaceTimeIndex extends React.Component {
     return this.state.raceTimesToDisplay.filter(time => time.crew === null).length
   }
 
+  getNumCrewsWithTooManyTimes(){
+    return this.state.raceTimesToDisplay.filter(time => time.crew && time.crew.times.length > 2).length
+  }
+
   handleSearchKeyUp(e){
     this.setState({
       searchTerm: e.target.value
@@ -66,9 +71,16 @@ class RaceTimeIndex extends React.Component {
     }, () => this.combineFilters(this.state.raceTimes))
   }
 
+  handleCrewsWithTooManyTimes(e){
+    this.setState({
+      crewsWithTooManyTimesBoolean: e.target.checked
+    }, () => this.combineFilters(this.state.raceTimes))
+  }
+
   combineFilters(filteredTimes) {
     let filteredBySearchText
     let filteredByTimesWithoutCrew
+    let filteredByCrewsWithTooManyTimes
     let filteredByTap
 
 
@@ -78,13 +90,19 @@ class RaceTimeIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.raceTimes
     } else {
-      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.id) || re.test(time.crew.competitors_names) : re.test(time.sequence))
+      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.bib_number) || re.test(time.crew.id) || re.test(time.crew.competitors_names) || re.test(time.sequence) : re.test(time.sequence))
     }
 
     if(this.state.timesWithoutCrewBoolean) {
       filteredByTimesWithoutCrew = this.state.raceTimes.filter(time => time.crew === null)
     } else {
       filteredByTimesWithoutCrew = this.state.raceTimes
+    }
+
+    if(this.state.crewsWithTooManyTimesBoolean) {
+      filteredByCrewsWithTooManyTimes = this.state.raceTimes.filter(time => time.crew && time.crew.times.length > 2)
+    } else {
+      filteredByCrewsWithTooManyTimes = this.state.raceTimes
     }
 
     if(this.state.startTab) {
@@ -95,7 +113,7 @@ class RaceTimeIndex extends React.Component {
 
 
     _.indexOf = _.findIndex
-    filteredTimes = _.intersection(this.state.raceTimes,  filteredBySearchText, filteredByTimesWithoutCrew, filteredByTap)
+    filteredTimes = _.intersection(this.state.raceTimes,  filteredBySearchText, filteredByTimesWithoutCrew, filteredByCrewsWithTooManyTimes, filteredByTap)
 
     return this.setState({ raceTimesToDisplay: filteredTimes, pageIndex: 0 })
 
@@ -131,6 +149,13 @@ class RaceTimeIndex extends React.Component {
             <label className="checkbox" >
               <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleTimesWithoutCrew} />
               {`⚠️ Times with no crew (${this.getNumTimesWithNoCrew()})`}
+            </label>
+          </div>
+
+          <div className="field">
+            <label className="checkbox" >
+              <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleCrewsWithTooManyTimes} />
+              {`❗️ Crews with too many times (${this.getNumCrewsWithTooManyTimes()})`}
             </label>
           </div>
 
@@ -171,7 +196,7 @@ class RaceTimeIndex extends React.Component {
                   <td>{formatTimes(raceTime.time_tap)}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.bib_number}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.id}</td>
-                  <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.name}</td>
+                  <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.times.length > 2 ? raceTime.crew.name + '❗️' : raceTime.crew.name}</td>
                   <td>{raceTime.crew === null ? '⚠️' : raceTime.crew.competitor_names}</td>
 
                 </tr>
