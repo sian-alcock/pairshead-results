@@ -63,6 +63,18 @@ class ResultIndex extends React.Component {
     return crewsInCategory
   }
 
+  getTwoCrewsInCategory(event, crews){
+    // For the position in category, filter by crews in each event_band (category) but exclude crews marked as 'time only'.
+    const crewsInCategory = crews.filter(crew => crew.event_band === event && !crew.time_only)
+    const closeTimes = []
+    crewsInCategory.forEach((crew, i) => {
+      if(Math.abs(crew.category_position_time[i]-crew.category_position_time[i+1]) <= 2000){
+        closeTimes.push(crew.category_position_time[i], crew.category_position_time[i+1])
+      }
+    })
+    return closeTimes
+  }
+
   getCategories(){
     // Populate the category (event_band) pull down with all event_bands
     let eventBands = this.state.crews.map(crew => crew.event_band)
@@ -139,7 +151,7 @@ class ResultIndex extends React.Component {
     const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
     const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
     console.log(this.state.crewsToDisplay)
-
+    console.log(this.getTwoCrewsInCategory())
     return (
 
       <section className="section">

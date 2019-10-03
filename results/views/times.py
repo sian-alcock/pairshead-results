@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-from .serializers import WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer
+from ..serializers import WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer
 
-from .models import RaceTime
+from ..models import RaceTime
 
 class RaceTimeListView(APIView): # extend the APIView
 

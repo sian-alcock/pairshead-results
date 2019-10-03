@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-from .serializers import  BandSerializer
+from ..serializers import  BandSerializer
 
-from .models import Band
+from ..models import Band
 
 class BandDataImport(APIView):
 

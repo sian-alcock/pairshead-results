@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-from .serializers import WriteClubSerializer, ClubSerializer
+from ..serializers import WriteClubSerializer, ClubSerializer
 
-from .models import Club
+from ..models import Club
 
 class ClubListView(APIView): # extend the APIView
 

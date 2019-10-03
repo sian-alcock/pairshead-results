@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-from .serializers import CompetitorSerializer
+from ..serializers import CompetitorSerializer
 
-from .models import Competitor
+from ..models import Competitor
 
 class CompetitorDataImport(APIView):
 

@@ -6,9 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-from .serializers import CrewSerializer, PopulatedCrewSerializer, WriteCrewSerializer, CrewExportSerializer
+from ..serializers import CrewSerializer, PopulatedCrewSerializer, WriteCrewSerializer, CrewExportSerializer
 
-from .models import Crew, RaceTime
+from ..models import Crew, RaceTime
 
 class CrewListView(APIView): # extend the APIView
 

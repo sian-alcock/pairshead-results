@@ -48,6 +48,8 @@ class Crew(models.Model):
     # raw_time = computed_property.ComputedIntegerField(compute_from='calculate_raw_time')
     # race_time = computed_property.ComputedIntegerField(compute_from='calculate_race_time')
     time_only = models.BooleanField(default=False)
+    did_not_start = models.BooleanField(default=False)
+    did_not_finish = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
