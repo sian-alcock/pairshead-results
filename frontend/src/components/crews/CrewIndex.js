@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
-import { formatTimes } from '../../lib/helpers'
+import { formatTimes, getImage } from '../../lib/helpers'
 import Paginator from '../common/Paginator'
 
 const _ = require('lodash').runInContext()
@@ -287,7 +287,7 @@ class CrewIndex extends React.Component {
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
                   <td>{!crew.competitor_names ? crew.name : crew.times.length && crew.times.length > 2 ? crew.competitor_names + '❗️' : crew.competitor_names}</td>
                   <td>{crew.status}</td>
-                  <td>{<img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" />}</td>
+                  <td>{getImage(crew)}</td>
                   <td>{!crew.bib_number ? '' : crew.bib_number}</td>
                   <td>{crew.club.index_code}</td>
                   <td>{crew.event_band}</td>

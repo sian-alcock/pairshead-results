@@ -1,9 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import axios from 'axios'
-import { formatTimes } from '../../lib/helpers'
-import Img from 'react-image'
-import image from '../../assets/unknown_blades.png'
+import { formatTimes, getImage } from '../../lib/helpers'
 import Paginator from '../common/Paginator'
 
 const _ = require('lodash').runInContext()
@@ -26,7 +24,6 @@ class ResultIndex extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
     this.handleCloseFirstAndSecondCrews = this.handleCloseFirstAndSecondCrews.bind(this)
-    this.getImage = this.getImage.bind(this)
 
   }
 
@@ -43,15 +40,6 @@ class ResultIndex extends React.Component {
     pageIndex < 0
     ) return null
     this.setState({ pageIndex })
-  }
-
-  getImage(crew) {
-    <Img
-      src={crew.club.blade_image}
-      alt="blade image"
-      width="10px"
-      height="10px"
-    />
   }
 
   getOverallRank(crew, crews) {
@@ -110,10 +98,6 @@ class ResultIndex extends React.Component {
     let filteredByCloseFirstAndSecondCrews
     let sortedCrews
 
-
-    // Only ever include crews with a published time
-    // const filteredByValidRaceTime = this.state.crews.filter(crew => crew.status === 'Accepted' && crew.published_time > 0)
-
     // Create filter based on Regular expression of the search term
     const re= new RegExp(this.state.searchTerm, 'i')
 
@@ -152,7 +136,6 @@ class ResultIndex extends React.Component {
     const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
     const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
     console.log(this.state.crewsToDisplay)
-    const myComponent = (crew) => <Img src={[`${crew.club.blade_image}`, `${image}`]} width="40px" />
 
     return (
 
@@ -239,7 +222,7 @@ class ResultIndex extends React.Component {
                   <td>{crew.id}</td>
                   <td>{formatTimes(crew.published_time)}</td>
                   <td>{!crew.masters_adjusted_time ? '' : formatTimes(crew.masters_adjusted_time)}</td>
-                  <td>{myComponent(crew)}</td>
+                  <td>{getImage(crew)}</td>
                   <td>{crew.club.name}</td>
                   <td>{crew.competitor_names}</td>
                   <td>{crew.composite_code}</td>

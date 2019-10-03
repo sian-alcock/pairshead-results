@@ -1,8 +1,11 @@
+import React from 'react'
 const moment = require('moment')
 const momentDurationFormatSetup = require('moment-duration-format')
 momentDurationFormatSetup(moment)
 typeof moment.duration.fn.format === 'function'
 typeof moment.duration.format === 'function'
+import image from '../assets/unknown_blades.png'
+import Img from 'react-image'
 
 
 export const formatTimes = function formatTimes(timeInMs){
@@ -14,3 +17,11 @@ export const formatTimeDate = function formatTimeDate(timeInMs){
   const date = new Date(timeInMs)
   return date.toDateString()
 }
+
+export const getImage = function getImage(crew) {
+  return <Img src={[`${crew.club.blade_image}`, `${image}`]} width="40px" />
+}
+
+// export const getImage = function getImage() {
+//   return <Img src={image} width="40px" />
+// }
