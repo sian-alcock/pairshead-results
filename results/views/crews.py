@@ -147,7 +147,7 @@ class CrewDataExport(APIView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="crewdata.csv"'
 
-        crews = Crew.objects.all()
+        crews = Crew.objects.filter(status__exact='Accepted')
 
         serializer = CrewExportSerializer(crews, many=True)
 

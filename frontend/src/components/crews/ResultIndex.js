@@ -3,6 +3,7 @@ import Select from 'react-select'
 import axios from 'axios'
 import { formatTimes } from '../../lib/helpers'
 import Img from 'react-image'
+import image from '../../assets/unknown_blades.png'
 import Paginator from '../common/Paginator'
 
 const _ = require('lodash').runInContext()
@@ -25,6 +26,7 @@ class ResultIndex extends React.Component {
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
     this.handleCloseFirstAndSecondCrews = this.handleCloseFirstAndSecondCrews.bind(this)
+    this.getImage = this.getImage.bind(this)
 
   }
 
@@ -43,9 +45,12 @@ class ResultIndex extends React.Component {
     this.setState({ pageIndex })
   }
 
-  getImage() {
+  getImage(crew) {
     <Img
-      src={['https://www.example.com/foo.jpg', '../../assets/unknown_blades.png']}
+      src={crew.club.blade_image}
+      alt="blade image"
+      width="10px"
+      height="10px"
     />
   }
 
@@ -147,6 +152,7 @@ class ResultIndex extends React.Component {
     const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
     const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
     console.log(this.state.crewsToDisplay)
+    const myComponent = (crew) => <Img src={[`${crew.club.blade_image}`, `${image}`]} width="40px" />
 
     return (
 
@@ -233,7 +239,7 @@ class ResultIndex extends React.Component {
                   <td>{crew.id}</td>
                   <td>{formatTimes(crew.published_time)}</td>
                   <td>{!crew.masters_adjusted_time ? '' : formatTimes(crew.masters_adjusted_time)}</td>
-                  <td><img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" /></td>
+                  <td>{myComponent(crew)}</td>
                   <td>{crew.club.name}</td>
                   <td>{crew.competitor_names}</td>
                   <td>{crew.composite_code}</td>

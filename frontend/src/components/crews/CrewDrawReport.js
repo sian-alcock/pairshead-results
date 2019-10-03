@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import Img from 'react-image'
+import image from '../../assets/unknown_blades.png'
 
 
 const _ = require('lodash').runInContext()
@@ -36,6 +38,7 @@ class CrewDrawReport extends React.Component {
   render() {
 
     !this.state.crewsToDisplay ? <h2>loading...</h2> : console.log(this.state.crewsToDisplay)
+    const myComponent = (crew) => <Img src={[`${crew.club.blade_image}`, `${image}`]} width="40px" />
 
     return (
       <section className="section">
@@ -70,7 +73,7 @@ class CrewDrawReport extends React.Component {
                   <td><Link to={`/crews/${crew.id}`}>{crew.id}</Link></td>
                   <td>{!crew.competitor_names ? crew.name : crew.competitor_names}</td>
                   <td>{crew.status}</td>
-                  <td>{<img className="blades" src={crew.club.blade_image} alt="blade image" width="40px" />}</td>
+                  <td>{myComponent(crew)}</td>
                   <td>{!crew.bib_number ? '' : crew.bib_number}</td>
                   <td>{crew.club.index_code}</td>
                   <td>{crew.event_band}</td>
