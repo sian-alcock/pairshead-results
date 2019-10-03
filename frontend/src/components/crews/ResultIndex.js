@@ -50,15 +50,16 @@ class ResultIndex extends React.Component {
   }
 
   getCategoryRank(crew, crews) {
+    // category_position_time combines published time and masters adjusted time as the latter only counts in the position in category
     const raceTimes = crews.map(crew => crew.category_position_time)
     const sorted = raceTimes.slice().sort((a,b) => a - b)
     const rank = sorted.indexOf(crew.category_position_time) + 1
     return !rank ? '' : rank
   }
 
-  getCrewsInCategory(event, crewsToDisplay){
+  getCrewsInCategory(event, crews){
     // For the position in category, filter by crews in each event_band (category) but exclude crews marked as 'time only'.
-    const crewsInCategory = crewsToDisplay.filter(crew => crew.event_band === event && !crew.time_only)
+    const crewsInCategory = crews.filter(crew => crew.event_band === event && !crew.time_only)
     return crewsInCategory
   }
 
@@ -172,7 +173,7 @@ class ResultIndex extends React.Component {
               <div className="field">
                 <label className="checkbox" >
                   <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleCloseFirstAndSecondCrews} />
-                  Crews in 1st and 2nd place
+                  <small>Crews in 1st and 2nd place</small>
                 </label>
               </div>
             </div>

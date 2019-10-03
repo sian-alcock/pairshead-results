@@ -7,6 +7,7 @@ class CrewTimeEdit extends React.Component {
   constructor() {
     super()
     this.state= {
+      time_only: '',
       formData: {},
       errors: {},
       allClubs: {},
@@ -184,7 +185,8 @@ class CrewTimeEdit extends React.Component {
                   className="checkbox"
                   type="checkbox"
                   name="time_only"
-                  checked={this.state.formData.time_only}
+                  value={this.state.formData.time_only}
+                  checked={!!this.state.formData.time_only}
                   onChange={this.handleCheckbox}
                 /> Time only
               </label>
