@@ -200,14 +200,14 @@ class CrewIndex extends React.Component {
               <div className="field">
                 <label className="checkbox" >
                   <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleCrewsWithoutStartTime} />
-                  {`⚠️ Crews without start time (${this.getNumCrewsWithoutStartTimes()})`}
+                  <small>{`⚠️ Crews without start time (${this.getNumCrewsWithoutStartTimes()})`}</small>
                 </label>
               </div>
 
               <div className="field">
                 <label className="checkbox" >
                   <input type="checkbox"  className="checkbox" value="crewsWithoutFinishTime" onClick={this.handleCrewsWithoutFinishTime} />
-                  {`⚠️ Crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}
+                  <small>{`⚠️ Crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}</small>
                 </label>
               </div>
 
@@ -215,7 +215,7 @@ class CrewIndex extends React.Component {
               <div className="field">
                 <label className="checkbox" >
                   <input type="checkbox"  className="checkbox" value="crewsWithMultipleTimes" onClick={this.handleCrewsWithTooManyTimes} />
-                  {`❗️ Crews with multiple times (${this.getNumCrewsWithTooManyTimes()})`}
+                  <small>{`❗️ Crews with multiple times (${this.getNumCrewsWithTooManyTimes()})`}</small>
                 </label>
               </div>
             </div>
@@ -224,7 +224,7 @@ class CrewIndex extends React.Component {
               <div className="field">
                 <label className="checkbox" >
                   <input type="checkbox"  className="checkbox" value="showScratchedCrews" onClick={this.handleScratchedCrews} />
-                  {`Hide scratched crews (${this.getNumScratchedCrews()})`}
+                  <small>{`Hide scratched crews (${this.getNumScratchedCrews()})`}</small>
                 </label>
               </div>
             </div>

@@ -11,6 +11,9 @@ $section-padding: 1.5rem 1.5rem;
 $tabs-boxed-link-hover-background-color: $phLogoBlue;
 $tabs-toggle-link-hover-background-color: $phLogoBlue;
 $tabs-toggle-link-active-background-color: $phLogoBlue;
+$size-1: 48px;
+$size-2: 24px;
+$size-3: 12px;
 
 .startTab.active, .finishTab.active {
   text-align: center;
@@ -47,10 +50,6 @@ table {
 div.list-totals {
   margin-bottom: 2px;
   padding-left: 9px;
-}
-
-hr {
-  margin: 12px 0 12px 0;
 }
 
 .tabContainer {

@@ -124,10 +124,12 @@ class ResultIndex extends React.Component {
 
     // As a rule, sort by shortest race_time but when showing 1st and second crews, sort by event
     if(this.state.closeFirstAndSecondCrewsBoolean) {
-      sortedCrews = filteredCrews.sort((a, b) => (a.event_band > b.event_band) ? 1 : -1)
+      sortedCrews = _.orderBy(filteredCrews, ['event_band', 'published_time'], ['asc', 'asc'])
     } else {
-      sortedCrews = filteredCrews.sort((a, b) => (a.published_time > b.published_time) ? 1 : -1)
+      sortedCrews = _.orderBy(filteredCrews, ['published_time'], ['asc'])
     }
+
+
     return this.setState({ crewsToDisplay: sortedCrews, pageIndex: 0 })
 
   }
