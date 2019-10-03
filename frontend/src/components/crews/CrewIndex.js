@@ -14,7 +14,7 @@ class CrewIndex extends React.Component {
     this.state = {
       crews: [],
       crewsToDisplay: [],
-      pageSize: 500,
+      pageSize: 20,
       pageIndex: 0,
       searchTerm: '',
       sortTerm: 'finish_sequence|asc',

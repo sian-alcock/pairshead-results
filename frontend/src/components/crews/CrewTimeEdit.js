@@ -178,21 +178,60 @@ class CrewTimeEdit extends React.Component {
               </div>
 
             </div>
+            <div className="columns">
+              <div className="column">
+                <div className="field">
+                  <label className="checkbox" htmlFor="time_only">
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      name="time_only"
+                      value={this.state.formData.time_only}
+                      checked={!!this.state.formData.time_only}
+                      onChange={this.handleCheckbox}
+                    /> Time only
+                  </label>
+                  {this.state.errors.time_only && <small className="help is-danger">{this.state.errors.time_only}</small>}
 
-            <div className="field">
-              <label className="checkbox" htmlFor="time_only">
-                <input
-                  className="checkbox"
-                  type="checkbox"
-                  name="time_only"
-                  value={this.state.formData.time_only}
-                  checked={!!this.state.formData.time_only}
-                  onChange={this.handleCheckbox}
-                /> Time only
-              </label>
-              {this.state.errors.time_only && <small className="help is-danger">{this.state.errors.time_only}</small>}
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="field">
+                  <label className="checkbox" htmlFor="did_not_start">
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      name="did_not_start"
+                      value={this.state.formData.did_not_start}
+                      checked={!!this.state.formData.did_not_start}
+                      onChange={this.handleCheckbox}
+                    /> Did not start
+                  </label>
+                  {this.state.errors.did_not_start && <small className="help is-danger">{this.state.errors.did_not_start}</small>}
+
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="field">
+                  <label className="checkbox" htmlFor="did_not_finish">
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      name="did_not_finish"
+                      value={this.state.formData.did_not_finish}
+                      checked={!!this.state.formData.did_not_finish}
+                      onChange={this.handleCheckbox}
+                    /> Did not finish
+                  </label>
+                  {this.state.errors.did_not_finish && <small className="help is-danger">{this.state.errors.did_not_finish}</small>}
+
+                </div>
+              </div>
 
             </div>
+            
             <br />
             <button className="button is-primary">Submit</button>
           </form>

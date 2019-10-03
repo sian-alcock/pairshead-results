@@ -63,7 +63,7 @@ class CrewRaceTimesImport(APIView):
     def get(self, _request):
         RaceTime.objects.all().delete()
         script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-        rel_path = "csv/race_times.csv"
+        rel_path = "../csv/race_times.csv"
         abs_file_path = os.path.join(script_dir, rel_path)
 
         with open(abs_file_path, newline='') as f:
