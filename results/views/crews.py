@@ -70,6 +70,7 @@ class CrewDataImport(APIView):
 
         header = {'Authorization':UserAuth}
         request = {'api_key':UserAPI, 'meetingIdentifier':Meeting}
+
         url = 'https://webapi.britishrowing.org/api/OE2CrewInformation' # change ENDPOINTNAME for the needed endpoint eg OE2MeetingSetup
 
         r = requests.post(url, json=request, headers=header)

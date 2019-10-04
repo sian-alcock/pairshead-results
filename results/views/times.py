@@ -80,8 +80,8 @@ class CrewRaceTimesImport(APIView):
                         'crew':row[8] or None
                     }
                     serializer = WriteRaceTimesSerializer(data=data)
-                    serializer.is_valid(raise_exception=True)
-                    serializer.save()
+                    if serializer.is_valid():
+                        serializer.save()
 
             race_times = RaceTime.objects.all()
 

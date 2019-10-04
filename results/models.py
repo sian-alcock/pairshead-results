@@ -48,8 +48,19 @@ class Crew(models.Model):
     did_not_start = models.BooleanField(default=False)
     did_not_finish = models.BooleanField(default=False)
 
+    event_band = models.CharField(max_length=20, null=True)
+    # published_time = models.IntegerField(default=0)
+    # category_position_time = models.IntegerField(default=0)
+
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.event_band = str(self.event.override_name) + ' ' + str(self.band.name) if self.band else self.event.override_name
+
+
+        super().save(*args, **kwargs)
+
 
     @property
     def competitor_names(self):
@@ -67,14 +78,14 @@ class Crew(models.Model):
     #     rank = published_times.index(self.published_time) + 1
     #     return rank
 
-    @property
-    def event_band(self):
-        if not self.band:
-            return self.event.override_name
+    # @property
+    # def event_band(self):
+    #     if not self.band:
+    #         return self.event.override_name
+    #
+    #     return str(self.event.override_name) + ' ' + str(self.band.name)
 
-        return str(self.event.override_name) + ' ' + str(self.band.name)
-
-    @property
+    # @property
     def raw_time(self):
         if len(self.times.filter(tap='Start')) > 1 or len(self.times.filter(tap='Finish')) > 1:
             return 0
@@ -86,10 +97,10 @@ class Crew(models.Model):
         end = self.times.get(tap='Finish').time_tap
         return end - start
 
-    @property
+    # @property
     def race_time(self):
         # The race time can include the penalty as by default it is 0
-        return self.raw_time + self.penalty*1000
+        return self.raw_time() + self.penalty*1000
 
     @property
     def published_time(self):
@@ -135,7 +146,7 @@ class Crew(models.Model):
         return sequence
 
 # Turn the three manual override fields into miliseconds
-    @property
+    # @property
     def manual_override_time(self):
         time = (self.manual_override_minutes*60*1000) + (self.manual_override_seconds*1000) + (self.manual_override_hundredths_seconds*10)
         return time

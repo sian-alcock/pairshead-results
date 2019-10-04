@@ -35,8 +35,8 @@ class CompetitorDataImport(APIView):
                 }
 
                 serializer = CompetitorSerializer(data=data)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+                if serializer.is_valid():
+                    serializer.save()
 
             competitors = Competitor.objects.all()
             serializer = CompetitorSerializer(competitors, many=True)
