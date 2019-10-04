@@ -13,8 +13,8 @@ class RaceTimeIndex extends React.Component {
       raceTimesToDisplay: [],
       pageSize: 20,
       pageIndex: 0,
-      searchTerm: '',
       timesWithoutCrewBoolean: false,
+      searchTerm: sessionStorage.getItem('raceTimeIndexSearch') || '',
       startTab: true,
       finishTab: false
     }
@@ -60,6 +60,7 @@ class RaceTimeIndex extends React.Component {
   }
 
   handleSearchKeyUp(e){
+    sessionStorage.setItem('raceTimeIndexSearch', e.target.value)
     this.setState({
       searchTerm: e.target.value
     }, () => this.combineFilters(this.state.raceTimes))
@@ -141,7 +142,7 @@ class RaceTimeIndex extends React.Component {
             <span className="icon is-left">
               <i className="fas fa-search"></i>
             </span>
-            <input className="input" placeholder="search" onKeyUp={this.handleSearchKeyUp} />
+            <input className="input" placeholder="search" value={this.state.searchTerm} onChange={this.handleSearchKeyUp} />
 
           </div>
 

@@ -53,11 +53,11 @@ class CrewIndex extends React.Component {
   }
 
   getNumCrewsWithoutStartTimes(){
-    return this.state.crews.filter(crew => !crew.start_time).length
+    return this.state.crews.filter(crew => crew.status === 'Accepted' && !crew.start_time).length
   }
 
   getNumCrewsWithoutFinishTimes(){
-    return this.state.crews.filter(crew => !crew.finish_time).length
+    return this.state.crews.filter(crew => crew.status === 'Accepted' && !crew.finish_time).length
   }
 
   getNumCrewsWithTooManyTimes(){
@@ -86,12 +86,14 @@ class CrewIndex extends React.Component {
   }
 
   handleCrewsWithoutFinishTime(e){
+
     this.setState({
       crewsWithoutFinishTimeBoolean: e.target.checked
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
   handleCrewsWithTooManyTimes(e){
+
     this.setState({
       crewsWithTooManyTimesBoolean: e.target.checked
     }, () => this.combineFiltersAndSort(this.state.crews))
@@ -201,22 +203,22 @@ class CrewIndex extends React.Component {
             <div className="column">
               <div className="field">
                 <label className="checkbox" htmlFor="crewsWithoutStartTime">
-                  <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleCrewsWithoutStartTime} />
-                  <small>{`⚠️ Crews without start time (${this.getNumCrewsWithoutStartTimes()})`}</small>
+                  <input type="checkbox"  className="checkbox" id="crewsWithoutStartTime" checked={!!this.state.crewsWithoutStartTimeBoolean} onChange={this.handleCrewsWithoutStartTime} />
+                  <small>{`⚠️ Accepted crews without start time (${this.getNumCrewsWithoutStartTimes()})`}</small>
                 </label>
               </div>
 
               <div className="field">
                 <label className="checkbox" htmlFor="crewsWithoutFinishTime" >
-                  <input type="checkbox"  className="checkbox" id="crewsWithoutFinishTime" onClick={this.handleCrewsWithoutFinishTime} />
-                  <small>{`⚠️ Crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}</small>
+                  <input type="checkbox"  className="checkbox" id="crewsWithoutFinishTime" checked={!!this.state.crewsWithoutFinishTimeBoolean} onChange={this.handleCrewsWithoutFinishTime} />
+                  <small>{`⚠️ Accepted crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}</small>
                 </label>
               </div>
 
 
               <div className="field">
                 <label className="checkbox" htmlFor="crewsWithMultipleTimes">
-                  <input type="checkbox"  className="checkbox" id="crewsWithMultipleTimes" onClick={this.handleCrewsWithTooManyTimes} />
+                  <input type="checkbox"  className="checkbox" id="crewsWithMultipleTimes" checked={!!this.state.crewsWithTooManyTimes} onChange={this.handleCrewsWithTooManyTimes} />
                   <small>{`❗️ Crews with multiple times (${this.getNumCrewsWithTooManyTimes()})`}</small>
                 </label>
               </div>
