@@ -118,7 +118,7 @@ class ResultIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.crews
     } else {
-      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitors_names) || re.test(!crew.event_band ? '' : crew.event_band))
+      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitor_names) || re.test(!crew.event_band ? '' : crew.event_band))
     }
 
     if(this.state.category) {

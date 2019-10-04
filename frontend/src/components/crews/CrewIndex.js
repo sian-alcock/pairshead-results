@@ -16,11 +16,9 @@ class CrewIndex extends React.Component {
       crewsToDisplay: [],
       pageSize: 20,
       pageIndex: 0,
-      searchTerm: '',
-      sortTerm: 'finish_sequence|asc',
-      crewsWithoutStartTimeBoolean: false,
-      crewsWithoutFinishTimeBoolean: false,
-      handleScratchedCrewsBoolean: true
+      sortTerm: 'bib_number|asc',
+      searchTerm: sessionStorage.getItem('crewIndexSearch') || '',
+      scratchedCrewsBoolean: true
     }
 
 
@@ -55,11 +53,11 @@ class CrewIndex extends React.Component {
   }
 
   getNumCrewsWithoutStartTimes(){
-    return this.state.crews.filter(crew => crew.status === 'Accepted' && !crew.start_time).length
+    return this.state.crews.filter(crew => !crew.start_time).length
   }
 
   getNumCrewsWithoutFinishTimes(){
-    return this.state.crews.filter(crew => crew.status === 'Accepted' && !crew.finish_time).length
+    return this.state.crews.filter(crew => !crew.finish_time).length
   }
 
   getNumCrewsWithTooManyTimes(){
@@ -71,6 +69,7 @@ class CrewIndex extends React.Component {
   }
 
   handleSearchKeyUp(e){
+    sessionStorage.setItem('crewIndexSearch', e.target.value)
     this.setState({
       searchTerm: e.target.value
     }, () => this.combineFiltersAndSort(this.state.crews))
@@ -117,7 +116,7 @@ class CrewIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.crews
     } else {
-      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.status) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitors_names) || re.test(!crew.band ? '' : crew.band.name) || re.test(!crew.event ? '' : crew.event.name))
+      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.status) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitor_names) || re.test(!crew.band ? '' : crew.band.name) || re.test(!crew.event ? '' : crew.event.name))
     }
 
     if(this.state.crewsWithoutStartTimeBoolean) {
@@ -159,6 +158,8 @@ class CrewIndex extends React.Component {
     const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
     const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
 
+    console.log(this.state.searchTerm)
+
     return (
       <section className="section">
         <div className="container">
@@ -170,7 +171,7 @@ class CrewIndex extends React.Component {
                 <span className="icon is-left">
                   <i className="fas fa-search"></i>
                 </span>
-                <input className="input" placeholder="search" onKeyUp={this.handleSearchKeyUp} />
+                <input className="input" placeholder="search" value={this.state.searchTerm} onChange={this.handleSearchKeyUp} />
 
               </div>
             </div>
@@ -179,8 +180,9 @@ class CrewIndex extends React.Component {
               <div className="field">
                 <div className="select">
                   <select onChange={this.handleSortChange}>
-                    <option value="name|asc">Name A-Z</option>
-                    <option value="name|desc">Name Z-A</option>
+                    <option value=""></option>
+                    <option value="competitor_names|asc">Crew A-Z</option>
+                    <option value="competitor_names|desc">Crew Z-A</option>
                     <option value="start_sequence|asc">Start sequence, asc</option>
                     <option value="start_sequence|desc">Start sequence, desc</option>
                     <option value="finish_sequence|asc">Finish sequence, asc</option>
@@ -198,23 +200,23 @@ class CrewIndex extends React.Component {
 
             <div className="column">
               <div className="field">
-                <label className="checkbox" >
+                <label className="checkbox" htmlFor="crewsWithoutStartTime">
                   <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleCrewsWithoutStartTime} />
                   <small>{`⚠️ Crews without start time (${this.getNumCrewsWithoutStartTimes()})`}</small>
                 </label>
               </div>
 
               <div className="field">
-                <label className="checkbox" >
-                  <input type="checkbox"  className="checkbox" value="crewsWithoutFinishTime" onClick={this.handleCrewsWithoutFinishTime} />
+                <label className="checkbox" htmlFor="crewsWithoutFinishTime" >
+                  <input type="checkbox"  className="checkbox" id="crewsWithoutFinishTime" onClick={this.handleCrewsWithoutFinishTime} />
                   <small>{`⚠️ Crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}</small>
                 </label>
               </div>
 
 
               <div className="field">
-                <label className="checkbox" >
-                  <input type="checkbox"  className="checkbox" value="crewsWithMultipleTimes" onClick={this.handleCrewsWithTooManyTimes} />
+                <label className="checkbox" htmlFor="crewsWithMultipleTimes">
+                  <input type="checkbox"  className="checkbox" id="crewsWithMultipleTimes" onClick={this.handleCrewsWithTooManyTimes} />
                   <small>{`❗️ Crews with multiple times (${this.getNumCrewsWithTooManyTimes()})`}</small>
                 </label>
               </div>
@@ -222,8 +224,8 @@ class CrewIndex extends React.Component {
 
             <div className="column">
               <div className="field">
-                <label className="checkbox" >
-                  <input type="checkbox"  className="checkbox" value="showScratchedCrews" onClick={this.handleScratchedCrews} />
+                <label className="checkbox" htmlFor="showScratchedCrews" >
+                  <input type="checkbox"  className="checkbox" id="showScratchedCrews" value={this.state.scratchedCrewsBoolean} checked={!!this.state.scratchedCrewsBoolean} onChange={this.handleScratchedCrews} />
                   <small>{`Hide scratched crews (${this.getNumScratchedCrews()})`}</small>
                 </label>
               </div>
@@ -235,6 +237,8 @@ class CrewIndex extends React.Component {
             totalPages={totalPages}
             changePage={this.changePage}
           />
+
+          <div className="list-totals"><small>{this.state.crewsToDisplay.length} of {this.state.crews.length} crews</small></div>
 
           <table className="table">
             <thead>

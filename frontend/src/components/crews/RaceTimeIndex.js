@@ -90,7 +90,7 @@ class RaceTimeIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.raceTimes
     } else {
-      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.bib_number) || re.test(time.crew.id) || re.test(time.crew.competitors_names) || re.test(time.sequence) : re.test(time.sequence))
+      filteredBySearchText = this.state.raceTimes.filter(time => time.crew !== null ? re.test(time.crew.name) || re.test(time.crew.bib_number) || re.test(time.crew.id) || re.test(time.crew.competitor_names) || re.test(time.sequence) : re.test(time.sequence))
     }
 
     if(this.state.timesWithoutCrewBoolean) {
@@ -164,6 +164,8 @@ class RaceTimeIndex extends React.Component {
             totalPages={totalPages}
             changePage={this.changePage}
           />
+
+          <div className="list-totals"><small>{this.state.raceTimesToDisplay.length} of {this.state.raceTimes.length} crews</small></div>
 
           <table className="table">
             <thead>
