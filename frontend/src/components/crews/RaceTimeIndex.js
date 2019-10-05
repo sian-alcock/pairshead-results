@@ -50,7 +50,6 @@ class RaceTimeIndex extends React.Component {
 
   displayFinishTimes(){
     this.setState({ startTab: false, finishTab: true}, () => this.combineFilters(this.state.raceTimes))
-    console.log(this.state.startTab)
   }
 
   getNumTimesWithNoCrew(){
@@ -131,7 +130,6 @@ class RaceTimeIndex extends React.Component {
 
   render() {
 
-    !this.state.raceTimesToDisplay ? <h2>loading...</h2> : console.log(this.state.raceTimesToDisplay)
     const totalPages = Math.floor((this.state.raceTimesToDisplay.length - 1) / this.state.pageSize)
     const pagedRaceTimes = this.state.raceTimesToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
     const pagingOptions = [{label: '20 times', value: '20'}, {label: '50 times', value: '50'}, {label: '100 times', value: '100'}, {label: 'All times', value: '500'}]

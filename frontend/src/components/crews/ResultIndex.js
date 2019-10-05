@@ -83,7 +83,7 @@ class ResultIndex extends React.Component {
   getCategories(){
     // Populate the category (event_band) pull down with all event_bands
     let eventBands = this.state.crews.map(crew => crew.event_band)
-    eventBands = Array.from(new Set(eventBands))
+    eventBands = Array.from(new Set(eventBands)).sort()
     const options = eventBands.map(option => {
       return {label: option, value: option}
     })
@@ -110,7 +110,6 @@ class ResultIndex extends React.Component {
   }
 
   handleGenderChange(selectedOption){
-    console.log(selectedOption.value)
     this.setState({
       gender: selectedOption.value
     }, () => this.combineFiltersAndSort(this.state.crews))
@@ -177,9 +176,7 @@ class ResultIndex extends React.Component {
     const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
     const pagingOptions = [{label: '20 crews', value: '20'}, {label: '50 crews', value: '50'}, {label: '100 crews', value: '100'}, {label: 'All crews', value: '500'}]
     const genderOptions = [{label: 'All', value: 'all'}, {label: 'Open', value: 'Open'}, {label: 'Female', value: 'Female'}, {label: 'Mixed', value: 'Mixed'}]
-    console.log('genderfilter', this.state.filteredByGender)
 
-    console.log(this.getTopCrews('Op 2x Club', this.state.crewsToDisplay))
     return (
 
       <section className="section">
