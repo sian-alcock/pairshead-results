@@ -1,4 +1,5 @@
 import React from 'react'
+import Select from 'react-select'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { formatTimes } from '../../lib/helpers'
@@ -26,6 +27,7 @@ class RaceTimeIndex extends React.Component {
     this.handleTimesWithoutCrew = this.handleTimesWithoutCrew.bind(this)
     this.combineFilters = this.combineFilters.bind(this)
     this.changePage = this.changePage.bind(this)
+    this.handlePagingChange = this.handlePagingChange.bind(this)
     this.handleCrewsWithTooManyTimes = this.handleCrewsWithTooManyTimes.bind(this)
   }
 
@@ -78,6 +80,13 @@ class RaceTimeIndex extends React.Component {
     }, () => this.combineFilters(this.state.raceTimes))
   }
 
+
+  handlePagingChange(selectedOption){
+    this.setState({
+      pageSize: selectedOption.value
+    }, () => this.combineFilters(this.state.raceTimes))
+  }
+
   combineFilters(filteredTimes) {
     let filteredBySearchText
     let filteredByTimesWithoutCrew
@@ -125,6 +134,7 @@ class RaceTimeIndex extends React.Component {
     !this.state.raceTimesToDisplay ? <h2>loading...</h2> : console.log(this.state.raceTimesToDisplay)
     const totalPages = Math.floor((this.state.raceTimesToDisplay.length - 1) / this.state.pageSize)
     const pagedRaceTimes = this.state.raceTimesToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
+    const pagingOptions = [{label: '20 crews', value: '20'}, {label: '50 crews', value: '50'}, {label: '100 crews', value: '100'}, {label: 'All crews', value: '500'}]
 
     return (
       <section className="section">
@@ -138,34 +148,58 @@ class RaceTimeIndex extends React.Component {
             </div>
           </div>
 
-          <div className="search field control has-icons-left no-print">
-            <span className="icon is-left">
-              <i className="fas fa-search"></i>
-            </span>
-            <input className="input" placeholder="search" value={this.state.searchTerm} onChange={this.handleSearchKeyUp} />
+          <div className="columns">
+
+            <div className="column">
+              <div className="search field control has-icons-left no-print">
+                <span className="icon is-left">
+                  <i className="fas fa-search"></i>
+                </span>
+                <input className="input" placeholder="search" value={this.state.searchTerm} onChange={this.handleSearchKeyUp} />
+              </div>
+            </div>
+
+            <div className="column">
+              <div className="field">
+                <div className="control">
+                  <Select
+                    id="paging"
+                    onChange={this.handlePagingChange}
+                    options={pagingOptions}
+                    placeholder='Select page size'
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="column">
+              <div className="field no-print">
+                <label className="checkbox" >
+                  <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleTimesWithoutCrew} />
+                  {`⚠️ Times with no crew (${this.getNumTimesWithNoCrew()})`}
+                </label>
+              </div>
+            </div>
+
+            <div className="column">
+              <div className="field no-print">
+                <label className="checkbox" >
+                  <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleCrewsWithTooManyTimes} />
+                  {`❗️ Crews with too many times (${this.getNumCrewsWithTooManyTimes()})`}
+                </label>
+              </div>
+            </div>
 
           </div>
 
-          <div className="field no-print">
-            <label className="checkbox" >
-              <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleTimesWithoutCrew} />
-              {`⚠️ Times with no crew (${this.getNumTimesWithNoCrew()})`}
-            </label>
+
+          <div className="no-print">
+            <Paginator
+              pageIndex={this.state.pageIndex}
+              totalPages={totalPages}
+              changePage={this.changePage}
+            />
           </div>
-
-          <div className="field no-print">
-            <label className="checkbox" >
-              <input type="checkbox"  className="checkbox" value="timesWithoutCrew" onClick={this.handleCrewsWithTooManyTimes} />
-              {`❗️ Crews with too many times (${this.getNumCrewsWithTooManyTimes()})`}
-            </label>
-          </div>
-
-          <Paginator
-            pageIndex={this.state.pageIndex}
-            totalPages={totalPages}
-            changePage={this.changePage}
-          />
-
           <div className="list-totals"><small>{this.state.raceTimesToDisplay.length} of {this.state.raceTimes.length} crews</small></div>
 
           <table className="table">
@@ -207,11 +241,13 @@ class RaceTimeIndex extends React.Component {
             </tbody>
           </table>
 
-          <Paginator
-            pageIndex={this.state.pageIndex}
-            totalPages={totalPages}
-            changePage={this.changePage}
-          />
+          <div className="no-print">
+            <Paginator
+              pageIndex={this.state.pageIndex}
+              totalPages={totalPages}
+              changePage={this.changePage}
+            />
+          </div>
 
         </div>
 
