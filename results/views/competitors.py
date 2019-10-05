@@ -1,12 +1,14 @@
+import csv
 import os
 import requests
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-from ..serializers import CompetitorSerializer
+from ..serializers import CompetitorSerializer, CompetitorExportSerializer
 
-from ..models import Competitor
+from ..models import Competitor, Crew
 
 class CompetitorDataImport(APIView):
 
@@ -43,3 +45,25 @@ class CompetitorDataImport(APIView):
             return Response(serializer.data)
 
         return Response(status=400)
+
+class CompetitorDataExport(APIView):
+
+    def get(self, _request):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="competitordata.csv"'
+
+        crews = Crew.objects.filter(status__exact='Accepted')
+
+        serializer = CompetitorExportSerializer(crews, many=True)
+
+        crews = serializer.data
+
+        header = CompetitorExportSerializer.Meta.fields
+
+        writer = csv.DictWriter(response, fieldnames=header)
+        writer.writeheader()
+
+        for row in serializer.data:
+            writer.writerow(row)
+
+        return response

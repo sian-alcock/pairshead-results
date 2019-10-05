@@ -59,7 +59,7 @@ class PopulatedCrewSerializer(serializers.ModelSerializer):
 
 class CrewExportSerializer(serializers.ModelSerializer):
 
-    raw_time = serializers.CharField()
+    raw_time = serializers.CharField(max_length=15)
 
     class Meta:
         model = Crew
@@ -74,6 +74,12 @@ class CrewExportSerializer(serializers.ModelSerializer):
         value = str(minutes)+':'+str(seconds)+'.'+str(hundredths)
 
         return value
+
+class CompetitorExportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Crew
+        fields = ('id', 'name', 'competitor_names',)
 
 
 class WriteCrewSerializer(serializers.ModelSerializer):

@@ -13,7 +13,6 @@ class Home extends React.Component {
     this.getCrewsWithoutTimes = this.getCrewsWithoutTimes.bind(this)
     this.getTotalCrews = this.getTotalCrews.bind(this)
     this.getScratchedCrewsWithTimes = this.getScratchedCrewsWithTimes.bind(this)
-    this.exportCrewData = this.exportCrewData.bind(this)
   }
 
   componentDidMount() {
@@ -50,9 +49,7 @@ class Home extends React.Component {
     return acceptedCrews.length
   }
 
-  exportCrewData(){
-    window.open('api/crew-data-export/')
-  }
+
 
   render() {
 
@@ -68,6 +65,17 @@ class Home extends React.Component {
                 }}>
                 <button className="button is-primary">
                   Import data
+                </button>
+              </Link>
+            </div>
+
+            <div className="column has-text-centered">
+              <Link
+                to={{
+                  pathname: '/export'
+                }}>
+                <button className="button is-primary">
+                  Export data
                 </button>
               </Link>
             </div>
@@ -144,25 +152,6 @@ class Home extends React.Component {
             </div>
             <div className="column">
               <p>{this.getScratchedCrewsWithTimes()}</p>
-            </div>
-          </div>
-
-          <div className="box">
-            <h2 className="subtitle has-text-centered">Prepare Results</h2>
-          </div>
-
-          <div className="columns">
-            <div className="column has-text-centered">
-              <button className="button is-primary">Results Overview</button>
-            </div>
-            <div className="column has-text-centered">
-              <button className="button is-primary">Calculate Handicaps</button>
-            </div>
-            <div className="column has-text-centered">
-              <button className="button is-primary" onClick={this.exportCrewData}>Export crew data</button>
-            </div>
-            <div className="column has-text-centered">
-              <button className="button is-primary">Submit BROE Results</button>
             </div>
           </div>
 

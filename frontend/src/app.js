@@ -13,6 +13,7 @@ import RaceTimeIndex from './components/crews/RaceTimeIndex'
 import RaceTimeEdit from './components/crews/RaceTimeEdit'
 import ResultIndex from './components/crews/ResultIndex'
 import ImportData from './components/crews/ImportData'
+import ExportData from './components/crews/ExportData'
 import CrewDrawReport from './components/crews/CrewDrawReport'
 import Navbar from './components/common/Navbar'
 import Footer from './components/common/Footer'
@@ -41,6 +42,7 @@ class App extends React.Component {
             <Route path="/race-times" component={RaceTimeIndex} />
             <Route path="/results" component={ResultIndex} />
             <Route path="/import" component={ImportData} />
+            <Route path="/export" component={ExportData} />
             <Route path="/crew-draw-report" component={CrewDrawReport} />
             <Route path="/info" component={Info} />
             <Route path="/" component={Home} />
