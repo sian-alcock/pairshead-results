@@ -14,6 +14,10 @@ $tabs-toggle-link-active-background-color: $phLogoBlue;
 $size-1: 48px;
 $size-2: 24px;
 $size-3: 12px;
+$navbar-item-color: $bblBlue;
+$navbar-item-hover-background-color: $phLogoBlue;
+$navbar-item-hover-color: white;
+$navbar-height: 1 rem;
 
 .startTab.active, .finishTab.active {
   text-align: center;

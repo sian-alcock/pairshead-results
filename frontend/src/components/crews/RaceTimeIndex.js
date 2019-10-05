@@ -134,7 +134,7 @@ class RaceTimeIndex extends React.Component {
     !this.state.raceTimesToDisplay ? <h2>loading...</h2> : console.log(this.state.raceTimesToDisplay)
     const totalPages = Math.floor((this.state.raceTimesToDisplay.length - 1) / this.state.pageSize)
     const pagedRaceTimes = this.state.raceTimesToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
-    const pagingOptions = [{label: '20 crews', value: '20'}, {label: '50 crews', value: '50'}, {label: '100 crews', value: '100'}, {label: 'All crews', value: '500'}]
+    const pagingOptions = [{label: '20 times', value: '20'}, {label: '50 times', value: '50'}, {label: '100 times', value: '100'}, {label: 'All times', value: '500'}]
 
     return (
       <section className="section">
@@ -200,7 +200,7 @@ class RaceTimeIndex extends React.Component {
               changePage={this.changePage}
             />
           </div>
-          <div className="list-totals"><small>{this.state.raceTimesToDisplay.length} of {this.state.raceTimes.length} crews</small></div>
+          <div className="list-totals"><small>{this.state.raceTimesToDisplay.length} of {this.state.raceTimes.length} times</small></div>
 
           <table className="table">
             <thead>

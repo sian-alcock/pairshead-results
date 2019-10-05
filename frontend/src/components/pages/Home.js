@@ -56,54 +56,7 @@ class Home extends React.Component {
     return (
       <section className="section">
         <div className="container">
-          <div className="columns is-centered">
 
-            <div className="column has-text-centered">
-              <Link
-                to={{
-                  pathname: '/import'
-                }}>
-                <button className="button is-primary">
-                  Import data
-                </button>
-              </Link>
-            </div>
-
-            <div className="column has-text-centered">
-              <Link
-                to={{
-                  pathname: '/export'
-                }}>
-                <button className="button is-primary">
-                  Export data
-                </button>
-              </Link>
-            </div>
-
-            <div className="column has-text-centered">
-              <Link
-                to={{
-                  pathname: '/race-times',
-                  state: { startTab: true, finishTab: false }
-                }}>
-                <button className="button is-primary">
-                  Fix Start Sequence
-                </button>
-              </Link>
-            </div>
-
-            <div className="column has-text-centered">
-              <Link
-                to={{
-                  pathname: '/race-times',
-                  state: { startTab: false, finishTab: true }
-                }}>
-                <button className="button is-primary">
-                Fix Finish Sequence
-                </button>
-              </Link>
-            </div>
-          </div>
 
           <div className="box">
             <h2 className="subtitle has-text-centered">Summary</h2>
@@ -152,6 +105,56 @@ class Home extends React.Component {
             </div>
             <div className="column">
               <p>{this.getScratchedCrewsWithTimes()}</p>
+            </div>
+          </div>
+
+
+          <div className="columns is-centered">
+
+            <div className="column has-text-centered">
+              <Link
+                to={{
+                  pathname: '/import'
+                }}>
+                <button className="button is-primary">
+                  Import data
+                </button>
+              </Link>
+            </div>
+
+            <div className="column has-text-centered">
+              <Link
+                to={{
+                  pathname: '/export'
+                }}>
+                <button className="button is-primary">
+                  Export data
+                </button>
+              </Link>
+            </div>
+
+            <div className="column has-text-centered">
+              <Link
+                to={{
+                  pathname: '/race-times',
+                  state: { startTab: true, finishTab: false }
+                }}>
+                <button className="button is-primary">
+                  Fix Start Sequence
+                </button>
+              </Link>
+            </div>
+
+            <div className="column has-text-centered">
+              <Link
+                to={{
+                  pathname: '/race-times',
+                  state: { startTab: false, finishTab: true }
+                }}>
+                <button className="button is-primary">
+                Fix Finish Sequence
+                </button>
+              </Link>
             </div>
           </div>
 
