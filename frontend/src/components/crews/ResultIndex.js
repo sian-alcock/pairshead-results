@@ -16,13 +16,16 @@ class ResultIndex extends React.Component {
       searchTerm: sessionStorage.getItem('resultIndexSearch') || '',
       crewsInCategory: [],
       crewsToDisplay: [],
-      filteredByValidRaceTime: []
+      filteredByValidRaceTime: [],
+      positionFilteredByGender: []
     }
 
     this.changePage = this.changePage.bind(this)
     this.getCrewsInCategory = this.getCrewsInCategory.bind(this)
     this.combineFiltersAndSort = this.combineFiltersAndSort.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handleCategoryChange = this.handleCategoryChange.bind(this)
+    this.handlePagingChange = this.handlePagingChange.bind(this)
+    this.handleGenderChange = this.handleGenderChange.bind(this)
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
     this.handleCloseFirstAndSecondCrews = this.handleCloseFirstAndSecondCrews.bind(this)
 
@@ -84,7 +87,6 @@ class ResultIndex extends React.Component {
     const options = eventBands.map(option => {
       return {label: option, value: option}
     })
-    console.log(options)
     return [{label: '', value: ''}, ...options]
   }
 
@@ -95,10 +97,22 @@ class ResultIndex extends React.Component {
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
-  handleSelectChange(selectedOption){
-    console.log(selectedOption.value)
+  handleCategoryChange(selectedOption){
     this.setState({
       category: selectedOption.value
+    }, () => this.combineFiltersAndSort(this.state.crews))
+  }
+
+  handlePagingChange(selectedOption){
+    this.setState({
+      pageSize: selectedOption.value
+    }, () => this.combineFiltersAndSort(this.state.crews))
+  }
+
+  handleGenderChange(selectedOption){
+    console.log(selectedOption.value)
+    this.setState({
+      gender: selectedOption.value
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
@@ -112,6 +126,7 @@ class ResultIndex extends React.Component {
     let filteredBySearchText
     let filteredByCategory
     let filteredByCloseFirstAndSecondCrews
+    let filteredByGender
     let sortedCrews
 
     // Create filter based on Regular expression of the search term
@@ -129,6 +144,13 @@ class ResultIndex extends React.Component {
       filteredByCategory = this.state.crews
     }
 
+    if(this.state.gender === 'all' || !this.state.gender) {
+      filteredByGender = this.state.crews
+    } else {
+      filteredByGender = this.state.crews.filter(crew => crew.event.gender === this.state.gender)
+    }
+    this.setState({positionFilteredByGender: _.intersection(this.state.filteredByValidRaceTime, filteredByGender)})
+
     if(this.state.closeFirstAndSecondCrewsBoolean) {
       filteredByCloseFirstAndSecondCrews = this.state.crews.filter(crew => this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay)) === 1 || this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay)) === 2)
     } else {
@@ -136,7 +158,7 @@ class ResultIndex extends React.Component {
     }
 
     _.indexOf = _.findIndex
-    filteredCrews = _.intersection(this.state.filteredByValidRaceTime,  filteredBySearchText, filteredByCategory, filteredByCloseFirstAndSecondCrews)
+    filteredCrews = _.intersection(this.state.filteredByValidRaceTime,  filteredBySearchText, filteredByCategory, filteredByCloseFirstAndSecondCrews, filteredByGender)
 
     // As a rule, sort by shortest race_time but when showing 1st and second crews, sort by event
     if(this.state.closeFirstAndSecondCrewsBoolean) {
@@ -153,7 +175,9 @@ class ResultIndex extends React.Component {
   render() {
     const totalPages = Math.floor((this.state.crewsToDisplay.length - 1) / this.state.pageSize)
     const pagedCrews = this.state.crewsToDisplay.slice(this.state.pageIndex * this.state.pageSize, (this.state.pageIndex + 1) * this.state.pageSize)
-    console.log(this.state.crewsToDisplay)
+    const pagingOptions = [{label: '20 crews', value: '20'}, {label: '50 crews', value: '50'}, {label: '100 crews', value: '100'}, {label: 'All crews', value: '500'}]
+    const genderOptions = [{label: 'All', value: 'all'}, {label: 'Open', value: 'Open'}, {label: 'Female', value: 'Female'}, {label: 'Mixed', value: 'Mixed'}]
+    console.log('genderfilter', this.state.filteredByGender)
 
     console.log(this.getTopCrews('Op 2x Club', this.state.crewsToDisplay))
     return (
@@ -168,7 +192,7 @@ class ResultIndex extends React.Component {
                 <span className="icon is-left">
                   <i className="fas fa-search"></i>
                 </span>
-                <input className="input" id="search" placeholder="search" value={this.state.searchTerm} onChange={this.handleSearchKeyUp} />
+                <input className="input" id="search" placeholder="Search" value={this.state.searchTerm} onChange={this.handleSearchKeyUp} />
               </div>
             </div>
 
@@ -178,8 +202,37 @@ class ResultIndex extends React.Component {
                 <div className="control">
                   <Select
                     id="category"
-                    onChange={this.handleSelectChange}
+                    onChange={this.handleCategoryChange}
                     options={this.getCategories()}
+                    placeholder='Select category'
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="column">
+
+              <div className="field">
+                <div className="control">
+                  <Select
+                    id="paging"
+                    onChange={this.handlePagingChange}
+                    options={pagingOptions}
+                    placeholder='Select page size'
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="column">
+
+              <div className="field">
+                <div className="control">
+                  <Select
+                    id="gender"
+                    onChange={this.handleGenderChange}
+                    options={genderOptions}
+                    placeholder='Select gender'
                   />
                 </div>
               </div>
@@ -195,13 +248,13 @@ class ResultIndex extends React.Component {
             </div>
 
           </div>
-
-          <Paginator
-            pageIndex={this.state.pageIndex}
-            totalPages={totalPages}
-            changePage={this.changePage}
-          />
-
+          <div className="no-print">
+            <Paginator
+              pageIndex={this.state.pageIndex}
+              totalPages={totalPages}
+              changePage={this.changePage}
+            />
+          </div>
           <div className="list-totals"><small>{this.state.crewsToDisplay.length} of {this.state.filteredByValidRaceTime.length} results</small></div>
           <table className="table">
             <thead>
@@ -214,6 +267,7 @@ class ResultIndex extends React.Component {
                 <td>Crew</td>
                 <td>Composite code</td>
                 <td>Event</td>
+                <td>Gender</td>
                 <td>Pos in category</td>
                 <td>Penalty</td>
                 <td>TO</td>
@@ -229,6 +283,7 @@ class ResultIndex extends React.Component {
                 <td>Crew</td>
                 <td>Composite code</td>
                 <td>Event</td>
+                <td>Gender</td>
                 <td>Pos in category</td>
                 <td>Penalty</td>
                 <td>TO</td>
@@ -237,7 +292,7 @@ class ResultIndex extends React.Component {
             <tbody>
               {pagedCrews.map((crew) =>
                 <tr key={crew.id}>
-                  <td>{this.getOverallRank(crew, this.state.crewsToDisplay)}</td>
+                  <td>{!this.state.gender || this.state.gender === 'all' ? this.getOverallRank(crew, this.state.filteredByValidRaceTime) : this.getOverallRank(crew, this.state.positionFilteredByGender)}</td>
                   <td>{crew.id}</td>
                   <td>{formatTimes(crew.published_time)}</td>
                   <td>{!crew.masters_adjusted_time ? '' : formatTimes(crew.masters_adjusted_time)}</td>
@@ -246,6 +301,7 @@ class ResultIndex extends React.Component {
                   <td>{crew.competitor_names}</td>
                   <td>{crew.composite_code}</td>
                   <td>{crew.event_band}</td>
+                  <td>{crew.event.gender}</td>
                   <td>{this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay))}</td>
                   <td>{crew.penalty ? 'P' : ''}</td>
                   <td>{crew.time_only ? 'TO' : ''}</td>
@@ -253,13 +309,13 @@ class ResultIndex extends React.Component {
               )}
             </tbody>
           </table>
-
-          <Paginator
-            pageIndex={this.state.pageIndex}
-            totalPages={totalPages}
-            changePage={this.changePage}
-          />
-
+          <div className="no-print">
+            <Paginator
+              pageIndex={this.state.pageIndex}
+              totalPages={totalPages}
+              changePage={this.changePage}
+            />
+          </div>
         </div>
       </section>
     )

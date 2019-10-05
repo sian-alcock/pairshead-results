@@ -85,7 +85,7 @@ class Crew(models.Model):
     #
     #     return str(self.event.override_name) + ' ' + str(self.band.name)
 
-    # @property
+    @property
     def raw_time(self):
         if len(self.times.filter(tap='Start')) > 1 or len(self.times.filter(tap='Finish')) > 1:
             return 0
@@ -97,10 +97,10 @@ class Crew(models.Model):
         end = self.times.get(tap='Finish').time_tap
         return end - start
 
-    # @property
+    @property
     def race_time(self):
         # The race time can include the penalty as by default it is 0
-        return self.raw_time() + self.penalty*1000
+        return self.raw_time + self.penalty*1000
 
     @property
     def published_time(self):
@@ -146,7 +146,7 @@ class Crew(models.Model):
         return sequence
 
 # Turn the three manual override fields into miliseconds
-    # @property
+    @property
     def manual_override_time(self):
         time = (self.manual_override_minutes*60*1000) + (self.manual_override_seconds*1000) + (self.manual_override_hundredths_seconds*10)
         return time
