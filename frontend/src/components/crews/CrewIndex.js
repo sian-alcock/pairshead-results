@@ -203,14 +203,14 @@ class CrewIndex extends React.Component {
             <div className="column">
               <div className="field">
                 <label className="checkbox" htmlFor="crewsWithoutStartTime">
-                  <input type="checkbox"  className="checkbox" id="crewsWithoutStartTime" checked={!!this.state.crewsWithoutStartTimeBoolean} onChange={this.handleCrewsWithoutStartTime} />
+                  <input type="checkbox"  className="checkbox" id="crewsWithoutStartTime" onChange={this.handleCrewsWithoutStartTime} />
                   <small>{`⚠️ Accepted crews without start time (${this.getNumCrewsWithoutStartTimes()})`}</small>
                 </label>
               </div>
 
               <div className="field">
                 <label className="checkbox" htmlFor="crewsWithoutFinishTime" >
-                  <input type="checkbox"  className="checkbox" id="crewsWithoutFinishTime" checked={!!this.state.crewsWithoutFinishTimeBoolean} onChange={this.handleCrewsWithoutFinishTime} />
+                  <input type="checkbox"  className="checkbox" id="crewsWithoutFinishTime"  onChange={this.handleCrewsWithoutFinishTime} />
                   <small>{`⚠️ Accepted crews without finish time (${this.getNumCrewsWithoutFinishTimes()})`}</small>
                 </label>
               </div>
@@ -218,7 +218,7 @@ class CrewIndex extends React.Component {
 
               <div className="field">
                 <label className="checkbox" htmlFor="crewsWithMultipleTimes">
-                  <input type="checkbox"  className="checkbox" id="crewsWithMultipleTimes" checked={!!this.state.crewsWithTooManyTimes} onChange={this.handleCrewsWithTooManyTimes} />
+                  <input type="checkbox"  className="checkbox" id="crewsWithMultipleTimes"  onChange={this.handleCrewsWithTooManyTimes} />
                   <small>{`❗️ Crews with multiple times (${this.getNumCrewsWithTooManyTimes()})`}</small>
                 </label>
               </div>
