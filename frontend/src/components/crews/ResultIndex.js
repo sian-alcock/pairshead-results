@@ -136,7 +136,7 @@ class ResultIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.crews
     } else {
-      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitor_names) || re.test(!crew.event_band ? '' : crew.event_band))
+      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.club) || re.test(crew.id) || re.test(crew.bib_number) || re.test(crew.competitor_names) || re.test(!crew.event_band ? '' : crew.event_band))
     }
 
     if(this.state.category) {
@@ -162,7 +162,7 @@ class ResultIndex extends React.Component {
     filteredCrews = _.intersection(this.state.filteredByValidRaceTime,  filteredBySearchText, filteredByCategory, filteredByCloseFirstAndSecondCrews, filteredByGender)
 
     // As a rule, sort by shortest race_time but when showing 1st and second crews, sort by event
-    if(this.state.closeFirstAndSecondCrewsBoolean) {
+    if(this.state.firstAndSecondCrewsBoolean) {
       sortedCrews = _.orderBy(filteredCrews, ['event_band', 'published_time'], ['asc', 'asc'])
     } else {
       sortedCrews = _.orderBy(filteredCrews, ['published_time'], ['asc'])
@@ -263,36 +263,34 @@ class ResultIndex extends React.Component {
               changePage={this.changePage}
             />
           </div>
-          <div className="list-totals"><small>{this.state.crewsToDisplay.length} of {this.state.filteredByValidRaceTime.length} results</small></div>
+          <div className="list-totals no-print"><small>{this.state.crewsToDisplay.length} of {this.state.filteredByValidRaceTime.length} results</small></div>
           <table className="table">
             <thead>
               <tr>
                 <td>Overall position</td>
-                <td>Crew ID</td>
+                <td>Number</td>
                 <td>Time</td>
                 <td>Masters adjust</td>
                 <td colSpan='2'>Rowing club</td>
                 <td>Crew</td>
                 <td>Composite code</td>
                 <td>Event</td>
-                <td>Gender</td>
-                <td>Pos in category</td>
+                <td colSpan='2'>Pos in category</td>
                 <td>Penalty</td>
                 <td>TO</td>
               </tr>
             </thead>
-            <tfoot>
+            <tfoot className="no-print">
               <tr>
                 <td>Overall position</td>
-                <td>Crew ID</td>
+                <td>Number</td>
                 <td>Time</td>
                 <td>Masters adjust</td>
                 <td colSpan='2'>Rowing club</td>
                 <td>Crew</td>
                 <td>Composite code</td>
                 <td>Event</td>
-                <td>Gender</td>
-                <td>Pos in category</td>
+                <td colSpan='2'>Pos in category</td>
                 <td>Penalty</td>
                 <td>TO</td>
               </tr>
@@ -301,7 +299,7 @@ class ResultIndex extends React.Component {
               {pagedCrews.map((crew) =>
                 <tr key={crew.id}>
                   <td>{!this.state.gender || this.state.gender === 'all' ? this.getOverallRank(crew, this.state.filteredByValidRaceTime) : this.getOverallRank(crew, this.state.positionFilteredByGender)}</td>
-                  <td>{crew.id}</td>
+                  <td>{crew.bib_number}</td>
                   <td>{formatTimes(crew.published_time)}</td>
                   <td>{!crew.masters_adjusted_time ? '' : formatTimes(crew.masters_adjusted_time)}</td>
                   <td>{getImage(crew)}</td>
@@ -309,7 +307,6 @@ class ResultIndex extends React.Component {
                   <td>{crew.competitor_names}</td>
                   <td>{crew.composite_code}</td>
                   <td>{crew.event_band}</td>
-                  <td>{crew.event.gender}</td>
                   <td>{this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.filteredByValidRaceTime))}</td>
                   <td>{this.getTopCrews(crew.event_band, this.state.filteredByValidRaceTime) && this.state.closeFirstAndSecondCrewsBoolean ? '❓' : ''}</td>
                   <td>{crew.penalty ? 'P' : ''}</td>
