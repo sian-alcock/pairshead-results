@@ -1,21 +1,27 @@
+from __future__ import absolute_import
 import csv
 import os
 import requests
+# if this is where you store your django-rest-framework settings
+# from django.conf import settings
 from django.http import Http404, HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 
 from ..serializers import CrewSerializer, PopulatedCrewSerializer, WriteCrewSerializer, CrewExportSerializer
 
 from ..models import Crew, RaceTime
 
+
 class CrewListView(APIView): # extend the APIView
 
-    def get(self, _request):
+    def get(self, request):
         crews = Crew.objects.filter(status__in=('Scratched', 'Accepted')) # get all the crews
-        serializer = PopulatedCrewSerializer(crews, many=True)
-
+        paginator = LimitOffsetPagination()
+        result_page = paginator.paginate_queryset(crews, request)
+        serializer = PopulatedCrewSerializer(result_page, many=True, context={'request':request})
         return Response(serializer.data) # send the JSON to the client
 
     def post(self, request):

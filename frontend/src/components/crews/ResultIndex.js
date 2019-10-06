@@ -299,7 +299,7 @@ class ResultIndex extends React.Component {
                   <td>{crew.composite_code}</td>
                   <td>{crew.event_band}</td>
                   <td>{crew.event.gender}</td>
-                  <td>{this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay))}</td>
+                  <td>{this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.filteredByValidRaceTime))}</td>
                   <td>{crew.penalty ? 'P' : ''}</td>
                   <td>{crew.time_only ? 'TO' : ''}</td>
                 </tr>

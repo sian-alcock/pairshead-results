@@ -3,6 +3,7 @@ import os
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 
 from ..serializers import WriteRaceTimesSerializer, RaceTimesSerializer, PopulatedRaceTimesSerializer
@@ -11,9 +12,12 @@ from ..models import RaceTime
 
 class RaceTimeListView(APIView): # extend the APIView
 
-    def get(self, _request):
+    def get(self, request):
         race_times = RaceTime.objects.all() # get all the crews
-        serializer = PopulatedRaceTimesSerializer(race_times, many=True)
+
+        paginator = LimitOffsetPagination()
+        result_page = paginator.paginate_queryset(race_times, request)
+        serializer = PopulatedRaceTimesSerializer(result_page, many=True, context={'request':request})
 
         return Response(serializer.data) # send the JSON to the client
 
