@@ -27,7 +27,8 @@ class ResultIndex extends React.Component {
     this.handlePagingChange = this.handlePagingChange.bind(this)
     this.handleGenderChange = this.handleGenderChange.bind(this)
     this.handleSearchKeyUp = this.handleSearchKeyUp.bind(this)
-    this.handleCloseFirstAndSecondCrews = this.handleCloseFirstAndSecondCrews.bind(this)
+    this.handleFirstAndSecondCrews = this.handleFirstAndSecondCrews.bind(this)
+    this.handleCloseCrews = this.handleCloseCrews.bind(this)
 
   }
 
@@ -71,13 +72,8 @@ class ResultIndex extends React.Component {
     const crewsInCategory = crews.filter(crew => crew.event_band === event && !crew.time_only)
     const raceTimes = crewsInCategory.map(crew => crew.category_position_time)
     const sorted = raceTimes.slice().sort((a,b) => a - b)
-    const result = []
-    sorted.map((time, i) => {
-      if(Math.abs(time[i]-time[i+1] <= 10000)) {
-        result.push(time[i], time[i+1])
-      }
-    })
-    return result
+    const flagForReview = Math.abs(sorted[0]-sorted[1]) <= 2000 ? true : false
+    return flagForReview
   }
 
   getCategories(){
@@ -115,10 +111,16 @@ class ResultIndex extends React.Component {
     }, () => this.combineFiltersAndSort(this.state.crews))
   }
 
-  handleCloseFirstAndSecondCrews(e){
+  handleFirstAndSecondCrews(e){
+    this.setState({
+      firstAndSecondCrewsBoolean: e.target.checked
+    }, () => this.combineFiltersAndSort(this.state.crews))
+  }
+
+  handleCloseCrews(e){
     this.setState({
       closeFirstAndSecondCrewsBoolean: e.target.checked
-    }, () => this.combineFiltersAndSort(this.state.crews))
+    })
   }
 
   combineFiltersAndSort(filteredCrews) {
@@ -150,7 +152,7 @@ class ResultIndex extends React.Component {
     }
     this.setState({positionFilteredByGender: _.intersection(this.state.filteredByValidRaceTime, filteredByGender)})
 
-    if(this.state.closeFirstAndSecondCrewsBoolean) {
+    if(this.state.firstAndSecondCrewsBoolean) {
       filteredByCloseFirstAndSecondCrews = this.state.crews.filter(crew => this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay)) === 1 || this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.crewsToDisplay)) === 2)
     } else {
       filteredByCloseFirstAndSecondCrews = this.state.crews
@@ -201,7 +203,7 @@ class ResultIndex extends React.Component {
                     id="category"
                     onChange={this.handleCategoryChange}
                     options={this.getCategories()}
-                    placeholder='Select category'
+                    placeholder='Category'
                   />
                 </div>
               </div>
@@ -215,7 +217,7 @@ class ResultIndex extends React.Component {
                     id="paging"
                     onChange={this.handlePagingChange}
                     options={pagingOptions}
-                    placeholder='Select page size'
+                    placeholder='Page size'
                   />
                 </div>
               </div>
@@ -229,7 +231,7 @@ class ResultIndex extends React.Component {
                     id="gender"
                     onChange={this.handleGenderChange}
                     options={genderOptions}
-                    placeholder='Select gender'
+                    placeholder='Gender'
                   />
                 </div>
               </div>
@@ -238,8 +240,17 @@ class ResultIndex extends React.Component {
             <div className="column">
               <div className="field">
                 <label className="checkbox" >
-                  <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleCloseFirstAndSecondCrews} />
+                  <input type="checkbox"  className="checkbox" value="crewsWithoutStartTime" onClick={this.handleFirstAndSecondCrews} />
                   <small>Crews in 1st and 2nd place</small>
+                </label>
+              </div>
+            </div>
+
+            <div className="column">
+              <div className="field">
+                <label className="checkbox" >
+                  <input type="checkbox"  className="checkbox" value="highlightCloseCrews" onClick={this.handleCloseCrews} />
+                  <small>Highlight 1st/2nd crews within 2s ❓</small>
                 </label>
               </div>
             </div>
@@ -300,6 +311,7 @@ class ResultIndex extends React.Component {
                   <td>{crew.event_band}</td>
                   <td>{crew.event.gender}</td>
                   <td>{this.getCategoryRank(crew, this.getCrewsInCategory(crew.event_band, this.state.filteredByValidRaceTime))}</td>
+                  <td>{this.getTopCrews(crew.event_band, this.state.filteredByValidRaceTime) && this.state.closeFirstAndSecondCrewsBoolean ? '❓' : ''}</td>
                   <td>{crew.penalty ? 'P' : ''}</td>
                   <td>{crew.time_only ? 'TO' : ''}</td>
                 </tr>
