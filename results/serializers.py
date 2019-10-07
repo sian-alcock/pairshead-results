@@ -9,6 +9,7 @@ class EventSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'override_name', 'info', 'type', 'gender',)
 
 class BandSerializer(serializers.ModelSerializer):
+    event = EventSerializer()
     class Meta:
         model = Band
         fields = ('id', 'name', 'event',)
@@ -33,7 +34,7 @@ class CrewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'name', 'composite_code', 'status', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'penalty', 'masters_adjustment', 'masters_adjusted_time', 'masters_adjust_minutes', 'masters_adjust_seconds', 'bib_number', 'time_only', 'did_not_start', 'did_not_finish',)
+        fields = ('id', 'name', 'composite_code', 'status', 'manual_override_time', 'manual_override_minutes', 'manual_override_seconds', 'manual_override_hundredths_seconds', 'penalty', 'masters_adjustment', 'masters_adjusted_time', 'masters_adjust_minutes', 'masters_adjust_seconds', 'bib_number', 'time_only', 'did_not_start', 'did_not_finish', 'band',)
 
 
 class PopulatedCrewSerializer(serializers.ModelSerializer):
@@ -55,7 +56,7 @@ class CrewExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Crew
-        fields = ('id', 'bib_number', 'raw_time',)
+        fields = ('id', 'bib_number', 'name', 'competitor_names', 'start_sequence', 'finish_sequence', 'raw_time',)
 
     def validate_raw_time(self, value):
 

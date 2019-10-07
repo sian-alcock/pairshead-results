@@ -8,6 +8,14 @@ from ..serializers import  BandSerializer
 
 from ..models import Band
 
+class BandListView(APIView): # used to populate the pulldown on the CrewTimeEdit page
+
+    def get(self, _request):
+        bands = Band.objects.all() # get all the bands
+        serializer = BandSerializer(bands, many=True)
+
+        return Response(serializer.data) # send the JSON to the client
+
 class BandDataImport(APIView):
 
     def get(self, _request):

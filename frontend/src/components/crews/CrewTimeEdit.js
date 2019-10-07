@@ -1,4 +1,5 @@
 import React from 'react'
+import Select from 'react-select'
 import axios from 'axios'
 
 import { formatTimes } from '../../lib/helpers'
@@ -11,35 +12,62 @@ class CrewTimeEdit extends React.Component {
       formData: {},
       errors: {},
       allClubs: {},
-      allEvents: {}
+      allEvents: {},
+      bands: []
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCheckbox = this.handleCheckbox.bind(this)
+    this.handleBandChange = this.handleBandChange.bind(this)
 
   }
 
   componentDidMount() {
-    axios.get(`/api/crews/${this.props.match.params.id}`)
-      .then(res => this.setState({formData: res.data })
-      )
+    Promise.all([
+      axios.get(`/api/crews/${this.props.match.params.id}`), // i.e. axios.get(something)
+      axios.get('/api/bands/')
+    ]).then(([res1, res2]) => {
+      console.log(res1.data, res2.data)
+      this.setState({ formData: res1.data, bands: res2.data.map(option => {
+        return {label: `${option.event.name} ${option.name}`, value: option.id}
+      }).sort()
+      })
+    })
   }
+
+  // handleSubmit(e) {
+  //   e.preventDefault()
+  //   axios.put(`/api/crews/${this.props.match.params.id}`, this.state.formData)
+  //     .then(() => this.props.history.push('/crews'))
+  //     .catch(err => this.setState({ errors: err.response.data }))
+  // }
 
   handleSubmit(e) {
     e.preventDefault()
-    axios.put(`/api/crews/${this.props.match.params.id}`, this.state.formData)
+
+    const data = {
+      ...this.state.formData,
+      band: this.state.formData.band.value
+    }
+
+    axios.put(`/api/crews/${this.props.match.params.id}`, data)
       .then(() => this.props.history.push('/crews'))
       .catch(err => this.setState({ errors: err.response.data }))
   }
 
   handleChange(e) {
-    console.log('e props and val', e.target.name, e.target.value)
     const formData = { ...this.state.formData, [e.target.name]: e.target.value }
     this.setState({ formData })
   }
 
   handleCheckbox(e) {
     const formData = { ...this.state.formData, [e.target.name]: e.target.checked }
+    this.setState({ formData })
+  }
+
+  handleBandChange(selectedOption) {
+    console.log(selectedOption.value)
+    const formData = { ...this.state.formData, band: selectedOption.value }
     this.setState({ formData })
   }
 
@@ -73,17 +101,39 @@ class CrewTimeEdit extends React.Component {
 
           <form className="container box tableBorder" onSubmit={this.handleSubmit}>
 
-            <div className="field">
-              <label className="label" htmlFor="penalty">Penalty in seconds</label>
-              <input
-                className="input"
-                name="penalty"
-                id="penalty"
-                placeholder="eg: 5"
-                value={this.state.formData.penalty || ''}
-                onChange={this.handleChange}
-              />
-              {this.state.errors.penalty && <small className="help is-danger">{this.state.errors.penalty}</small>}
+            <div className="columns">
+
+              <div className="column">
+                <div className="field">
+                  <label className="label" htmlFor="penalty">Penalty in seconds</label>
+                  <input
+                    className="input"
+                    name="penalty"
+                    id="penalty"
+                    placeholder="eg: 5"
+                    value={this.state.formData.penalty || ''}
+                    onChange={this.handleChange}
+                  />
+                  {this.state.errors.penalty && <small className="help is-danger">{this.state.errors.penalty}</small>}
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="field">
+                  <div className="control">
+                    <label className="label" htmlFor="band">Band</label>
+                    <Select
+                      id="band"
+                      onChange={this.handleBandChange}
+                      options={this.state.bands}
+                      value={!this.state.formData.band ? '' : this.state.bands.find(option => option.value === this.state.formData.band.id)}
+                    />
+
+                    {this.state.errors.band && <small className="help is-danger">{this.state.errors.band}</small>}
+                  </div>
+                </div>
+              </div>
+
             </div>
             <p>Override race time</p>
 
@@ -230,8 +280,10 @@ class CrewTimeEdit extends React.Component {
                 </div>
               </div>
 
+
+
             </div>
-            
+
             <br />
             <button className="button is-primary">Submit</button>
           </form>

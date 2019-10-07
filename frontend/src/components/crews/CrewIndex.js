@@ -118,7 +118,7 @@ class CrewIndex extends React.Component {
     if(!this.state.searchTerm) {
       filteredBySearchText = this.state.crews
     } else {
-      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.status) || re.test(crew.club) || re.test(crew.id) || re.test(crew.competitor_names) || re.test(!crew.band ? '' : crew.band.name) || re.test(!crew.event ? '' : crew.event.name))
+      filteredBySearchText = this.state.crews.filter(crew => re.test(crew.name) || re.test(crew.status) || re.test(crew.club) || re.test(crew.id) || re.test(crew.bib_number) || re.test(crew.competitor_names) || re.test(!crew.band ? '' : crew.band.name) || re.test(!crew.event ? '' : crew.event.name))
     }
 
     if(this.state.crewsWithoutStartTimeBoolean) {
