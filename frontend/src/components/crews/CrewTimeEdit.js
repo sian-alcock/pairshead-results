@@ -19,6 +19,7 @@ class CrewTimeEdit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCheckbox = this.handleCheckbox.bind(this)
     this.handleBandChange = this.handleBandChange.bind(this)
+    this.getBandOptions = this.getBandOptions.bind(this)
 
   }
 
@@ -29,25 +30,23 @@ class CrewTimeEdit extends React.Component {
     ]).then(([res1, res2]) => {
       console.log(res1.data, res2.data)
       this.setState({ formData: res1.data, bands: res2.data.map(option => {
-        return {label: `${option.event.name} ${option.name}`, value: option.id}
+        return {label: `${option.event.override_name} ${option.name}`, value: option.id}
       }).sort()
       })
     })
   }
 
-  // handleSubmit(e) {
-  //   e.preventDefault()
-  //   axios.put(`/api/crews/${this.props.match.params.id}`, this.state.formData)
-  //     .then(() => this.props.history.push('/crews'))
-  //     .catch(err => this.setState({ errors: err.response.data }))
-  // }
+  getBandOptions(){
+    const options = [{label: '', value: ''}, ...this.state.bands]
+    return options
+  }
 
   handleSubmit(e) {
     e.preventDefault()
 
     const data = {
       ...this.state.formData,
-      band: this.state.formData.band.value
+      band: !this.state.formData.band ? '' : this.state.formData.band.value
     }
 
     axios.put(`/api/crews/${this.props.match.params.id}`, data)
@@ -125,7 +124,7 @@ class CrewTimeEdit extends React.Component {
                     <Select
                       id="band"
                       onChange={this.handleBandChange}
-                      options={this.state.bands}
+                      options={this.getBandOptions()}
                       value={!this.state.formData.band ? '' : this.state.bands.find(option => option.value === this.state.formData.band.id)}
                     />
 
